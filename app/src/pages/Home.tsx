@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { trpc } from "@/providers/trpc";
-import { BookOpen, GraduationCap, Languages, Globe, Building2, School, BarChart3, Play, List, Sparkles, Trash2, X, FolderOpen, Merge } from "lucide-react";
+import { BookOpen, GraduationCap, Languages, Globe, Building2, School, BarChart3, Play, List, Sparkles, Trash2, X, FolderOpen, Merge, Target, CheckCircle2, Brain, HelpCircle, XCircle, BookOpenCheck, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AiTopicDialog from "@/components/AiTopicDialog";
 
@@ -43,6 +43,20 @@ const categoryColors: Record<string, string> = {
 export default function Home() {
   const utils = trpc.useUtils();
   const { data: libraries, isLoading } = trpc.library.list.useQuery();
+  const { data: globalStats } = trpc.progress.getGlobalStats.useQuery();
+  const { data: masteredWords, isFetching: isFetchingMastered } = trpc.progress.getMasteredWords.useQuery(undefined, { enabled: false });
+
+  const handleExportMastered = async () => {
+    const words = await utils.progress.getMasteredWords.fetch();
+    if (!words || words.length === 0) return;
+    const blob = new Blob([words.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `已掌握单词_${words.length}个.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   const [aiOpen, setAiOpen] = useState(false);
 
   // 删除对话框状态
@@ -78,15 +92,44 @@ export default function Home() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
-          选择你的词库
-        </h1>
-        <p className="text-zinc-500 text-base md:text-lg">
-          内置常见单词库，涵盖四六级、托福、雅思、考研等考试词汇
-        </p>
-      </div>
+      {/* Global Stats */}
+      {globalStats && globalStats.totalWords > 0 && (
+        <div className="mb-8 grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600">{globalStats.totalWords}</div>
+            <div className="text-xs text-blue-500 mt-1">总单词数</div>
+          </div>
+          <button
+            onClick={handleExportMastered}
+            className="bg-green-50 border border-green-100 rounded-xl p-4 text-center hover:bg-green-100 transition-colors cursor-pointer group"
+            title="点击导出已掌握单词"
+          >
+            <div className="relative">
+              <span className="text-2xl font-bold text-green-600">{globalStats.mastered}</span>
+              <Download className="absolute -right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-green-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="text-xs text-green-500 mt-1">已掌握</div>
+          </button>
+          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-amber-600">{globalStats.wellKnown + globalStats.familiar}</div>
+            <div className="text-xs text-amber-500 mt-1">学习中</div>
+          </div>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-zinc-600">{globalStats.unlearned}</div>
+            <div className="text-xs text-zinc-500 mt-1">未学习</div>
+          </div>
+          <div className="col-span-2 md:col-span-1 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-indigo-600">{globalStats.progress}%</div>
+            <div className="text-xs text-indigo-500 mt-1">总体进度</div>
+            <div className="mt-2 h-1.5 bg-blue-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
+                style={{ width: `${Math.min(globalStats.progress, 100)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AI Topic Banner */}
       <button

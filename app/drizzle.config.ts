@@ -4,8 +4,8 @@ import { defineConfig } from "drizzle-kit";
 export default defineConfig({
   schema: "./db/schema.ts",
   out: "./db/migrations",
-  dialect: "sqlite",
+  dialect: "mysql",
   dbCredentials: {
-    url: process.env.DATABASE_URL?.replace("sqlite:", "") || "./data/wordflash.db",
+    url: process.env.DATABASE_URL || "mysql://root:password@localhost:3306/wordflash",
   },
 });

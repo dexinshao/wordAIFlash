@@ -38,6 +38,7 @@ export default function Study() {
   const utils = trpc.useUtils();
 
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const prefetchedWord = useRef<Word | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   const [studyCount, setStudyCount] = useState(0);
   const [sessionStats, setSessionStats] = useState({ studied: 0, mastered: 0 });
@@ -48,19 +49,46 @@ export default function Study() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isReviewing, setIsReviewing] = useState(false);
 
-  const fetchNextWord = useCallback(async () => {
+  const prefetchNextWord = useCallback(async (excludeWordId?: number) => {
     try {
-      const word = await utils.word.getNextFlashcard.fetch({ libraryId: libId });
+      const word = await utils.word.getNextFlashcard.fetch({ libraryId: libId, excludeWordId });
+      prefetchedWord.current = word;
+    } catch {
+      prefetchedWord.current = null;
+    }
+  }, [libId, utils]);
+
+  const fetchNextWord = useCallback(async () => {
+    let wordId: number | undefined;
+    // 优先使用预取的结果
+    if (prefetchedWord.current) {
+      const word = prefetchedWord.current;
+      prefetchedWord.current = null;
       if (!word) {
         setIsComplete(true);
         return;
       }
+      wordId = word.id;
       setCurrentWord(word);
       setIsFlipped(false);
-    } catch {
-      setIsComplete(true);
+    } else {
+      try {
+        const word = await utils.word.getNextFlashcard.fetch({ libraryId: libId });
+        if (!word) {
+          setIsComplete(true);
+          return;
+        }
+        wordId = word.id;
+        setCurrentWord(word);
+        setIsFlipped(false);
+      } catch {
+        setIsComplete(true);
+        return;
+      }
     }
-  }, [libId, utils]);
+    // 立即预取下一张，排除当前展示的单词
+    prefetchNextWord(wordId);
+  }, [libId, utils, prefetchNextWord]);
 
   // Fetch first word on mount
   useEffect(() => {
@@ -103,10 +131,11 @@ export default function Study() {
       mastered: feedback === "mastered" ? prev.mastered + 1 : prev.mastered,
     }));
 
-    // Slide out animation
+    // Slide out, then show next card directly
     setTimeout(() => {
       setStudyCount(prev => prev + 1);
       setIsReviewing(false);
+      setIsFlipped(false);
       fetchNextWord();
       setIsAnimating(false);
     }, 300);
@@ -132,6 +161,7 @@ export default function Study() {
     setTimeout(() => {
       setStudyCount(prev => prev + 1);
       setIsReviewing(false);
+      setIsFlipped(false);
       fetchNextWord();
       setIsAnimating(false);
     }, 300);
@@ -146,6 +176,9 @@ export default function Study() {
     setIsFlipped(true); // 回到上一个时直接显示释义，方便重新选择
     setIsReviewing(true);
     setHistory(h => h.slice(0, -1));
+    // 回退后预取的下一张可能不再准确，清除并重新预取
+    prefetchedWord.current = null;
+    prefetchNextWord(prev.word.id);
     setStudyCount(c => Math.max(0, c - 1));
 
     // 回退统计
@@ -172,10 +205,10 @@ export default function Study() {
       mastered: feedback === "mastered" ? prev.mastered + 1 : prev.mastered,
     }));
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setStudyCount(prev => prev + 1);
       setIsReviewing(false);
-      fetchNextWord();
+      await fetchNextWord();
       setIsAnimating(false);
     }, 300);
   };
@@ -290,9 +323,11 @@ export default function Study() {
       {/* Flashcard */}
       <div className="perspective-[1000px] mb-6">
         <div
-          className={`relative w-full h-[360px] md:h-[400px] cursor-pointer transition-transform duration-600 preserve-3d ${
-            isFlipped ? "rotate-y-180" : ""
-          } ${isAnimating ? (isFlipped ? "-translate-x-full opacity-0" : "translate-x-full opacity-0") : ""}`}
+          className={`relative w-full h-[360px] md:h-[400px] cursor-pointer preserve-3d ${
+            isFlipped && !isAnimating ? "rotate-y-180" : ""
+          } ${isAnimating ? (isFlipped ? "-translate-x-full opacity-0" : "translate-x-full opacity-0") : ""} ${
+            !isAnimating ? "transition-transform duration-600" : ""
+          }`}
           onClick={handleFlip}
           style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
         >
@@ -302,7 +337,12 @@ export default function Study() {
               <h3 className="text-4xl md:text-5xl font-bold text-white mb-3">
                 {currentWord.word}
               </h3>
-              <p className="text-zinc-400 text-lg mb-6">{currentWord.phonetic}</p>
+              <p className="text-zinc-400 text-lg mb-2">{currentWord.phonetic}</p>
+              {(currentWord.frequencyRank != null && currentWord.frequencyRank > 0 && currentWord.frequencyRank < 99999) && (
+                <span className="inline-block px-2.5 py-0.5 bg-zinc-700 text-zinc-300 text-xs rounded-full mb-4">
+                  词频排名 #{currentWord.frequencyRank}
+                </span>
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -325,7 +365,14 @@ export default function Study() {
               {/* Word header */}
               <div className="flex items-center justify-between mb-4 pb-4 border-b border-zinc-100">
                 <div>
-                  <h3 className="text-2xl font-bold text-black">{currentWord.word}</h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-2xl font-bold text-black">{currentWord.word}</h3>
+                    {(currentWord.frequencyRank != null && currentWord.frequencyRank > 0 && currentWord.frequencyRank < 99999) && (
+                      <span className="inline-block px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded-full font-medium">
+                        #{currentWord.frequencyRank}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-zinc-400">{currentWord.phonetic}</p>
                 </div>
                 <button

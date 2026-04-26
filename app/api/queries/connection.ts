@@ -1,28 +1,17 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
-import { existsSync, mkdirSync } from "node:fs";
-import { dirname } from "node:path";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import * as schema from "@db/schema";
 import * as relations from "@db/relations";
 
 const fullSchema = { ...schema, ...relations };
 
-const dbPath = process.env.DATABASE_URL?.replace("sqlite:", "") || "./data/wordflash.db";
+let instance: ReturnType<typeof drizzle<typeof fullSchema>>;
 
-// 确保数据库目录存在
-const dbDir = dirname(dbPath);
-if (!existsSync(dbDir)) {
-  mkdirSync(dbDir, { recursive: true });
-}
-
-let instance: ReturnType<typeof drizzle>;
-
-export function getDb() {
+export async function getDb() {
   if (!instance) {
-    const sqlite = new Database(dbPath);
-    sqlite.pragma("journal_mode = WAL");
-    sqlite.pragma("foreign_keys = ON");
-    instance = drizzle(sqlite, { schema: fullSchema });
+    const connectionString = process.env.DATABASE_URL || "mysql://root:root@192.168.64.1:3306/wordflash";
+    const connection = await mysql.createConnection(connectionString);
+    instance = drizzle(connection, { schema: fullSchema, mode: "default" });
   }
   return instance;
 }

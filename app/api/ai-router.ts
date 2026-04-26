@@ -26,7 +26,7 @@ export const aiRouter = createRouter({
       excludeLibraryId: z.number().optional(), // 排除指定词库的所有单词
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const MIN_WORDS = 10;
       const MAX_RETRIES = 3;
 
@@ -102,7 +102,7 @@ export const aiRouter = createRouter({
             const allLibs = await db
               .select({ id: wordLibraries.id, category: wordLibraries.category })
               .from(wordLibraries)
-              .where(eq(wordLibraries.isBuiltin, 1));
+              .where(eq(wordLibraries.isBuiltin, true));
 
             const libCategoryMap = new Map(allLibs.map((l: any) => [l.id, l.category]));
 
@@ -168,7 +168,7 @@ export const aiRouter = createRouter({
       topic: z.string().min(1).max(100),
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // 获取所有非"已掌握"词库
       const allLibs = await db
@@ -239,9 +239,9 @@ ${libListText}`
       targetLibraryId: z.number().optional(), // 合并到已有词库
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { topic, wordList, targetLibraryId } = input;
-      const now = new Date().toISOString();
+      const now = new Date();
 
       let libraryId: number;
 
@@ -264,7 +264,7 @@ ${libListText}`
           createdAt: now,
           updatedAt: now,
         });
-        libraryId = Number((libResult as any).lastInsertRowid);
+        libraryId = Number((libResult as any)[0].insertId);
       }
 
       // 导入单词（复用 word-router 的逻辑，但简化版）
@@ -293,7 +293,7 @@ ${libListText}`
               phrases: JSON.stringify([]),
               examples: JSON.stringify([]),
             });
-            wordId = Number((inserted as any).lastInsertRowid);
+            wordId = Number((inserted as any)[0].insertId);
             wordsToEnrich.push({ wordId, word });
           }
 
@@ -393,8 +393,8 @@ ${libListText}`
       wordList: z.array(z.string().min(1)),
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
-      const now = new Date().toISOString();
+      const db = await getDb();
+      const now = new Date();
       let marked = 0;
       let addedToMasteredLib = 0;
 
@@ -417,7 +417,7 @@ ${libListText}`
           createdAt: now,
           updatedAt: now,
         });
-        masteredLibId = Number((libResult as any).lastInsertRowid);
+        masteredLibId = Number((libResult as any)[0].insertId);
       }
 
       for (const rawWord of input.wordList) {
@@ -441,7 +441,7 @@ ${libListText}`
             phrases: JSON.stringify([]),
             examples: JSON.stringify([]),
           });
-          wordId = Number((inserted as any).lastInsertRowid);
+          wordId = Number((inserted as any)[0].insertId);
         }
 
         // 查找该单词关联的所有词库

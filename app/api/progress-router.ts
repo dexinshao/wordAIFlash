@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { createRouter, publicQuery } from "./middleware";
 import { getDb } from "./queries/connection";
-import { wordProgress, libraryWords } from "@db/schema";
-import { eq, and, inArray } from "drizzle-orm";
+import { wordProgress, libraryWords, words } from "@db/schema";
+import { eq, and, inArray, sql } from "drizzle-orm";
 
 // Feedback score mapping
 const FEEDBACK_SCORES: Record<string, number> = {
@@ -58,7 +58,7 @@ export const progressRouter = createRouter({
       feedback: z.enum(["unknown", "familiar", "well_known", "mastered"]),
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { wordId, libraryId, feedback } = input;
 
       // Find existing progress
@@ -98,9 +98,9 @@ export const progressRouter = createRouter({
             reviewCount: newReviewCount,
             streakCorrect: newStreak,
             isMastered,
-            lastReviewedAt: new Date().toISOString(),
-            nextReviewAt: nextReview?.toISOString() ?? null,
-            updatedAt: new Date().toISOString(),
+            lastReviewedAt: new Date(),
+            nextReviewAt: nextReview ?? null,
+            updatedAt: new Date(),
           })
           .where(eq(wordProgress.id, existing[0].id));
       } else {
@@ -112,8 +112,8 @@ export const progressRouter = createRouter({
           reviewCount: newReviewCount,
           streakCorrect: newStreak,
           isMastered,
-          lastReviewedAt: new Date().toISOString(),
-          nextReviewAt: nextReview?.toISOString() ?? null,
+          lastReviewedAt: new Date(),
+          nextReviewAt: nextReview ?? null,
         });
       }
 
@@ -123,7 +123,7 @@ export const progressRouter = createRouter({
   getLibraryStats: publicQuery
     .input(z.object({ libraryId: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { libraryId } = input;
 
       // Get all word IDs in library
@@ -203,13 +203,94 @@ export const progressRouter = createRouter({
       };
     }),
 
+  getGlobalStats: publicQuery
+    .query(async () => {
+      const db = await getDb();
+
+      // 总单词数（去重，按 word_id 统计）
+      const [totalResult] = await db
+        .select({ count: sql<number>`count(DISTINCT word_id)` })
+        .from(libraryWords);
+      const totalWords = totalResult?.count ?? 0;
+
+      if (totalWords === 0) {
+        return { totalWords: 0, mastered: 0, wellKnown: 0, familiar: 0, unknown: 0, unlearned: 0, progress: 0 };
+      }
+
+      // 获取所有学习进度（按 word_id 去重，取每个单词的最佳进度）
+      const allProgress = await db
+        .select()
+        .from(wordProgress);
+
+      // 按 wordId 分组，取掌握度最高的记录
+      const bestProgress = new Map<number, typeof wordProgress.$inferSelect>();
+      for (const p of allProgress) {
+        const existing = bestProgress.get(p.wordId);
+        if (!existing || (p.masteryScore ?? 0) > (existing.masteryScore ?? 0)) {
+          bestProgress.set(p.wordId, p);
+        }
+      }
+
+      let masteredCount = 0, wellKnownCount = 0, familiarCount = 0, unknownCount = 0, totalScore = 0;
+
+      for (const [, p] of bestProgress) {
+        const lastFeedback = p.lastFeedback;
+        if (p.isMastered || lastFeedback === "mastered") { masteredCount++; totalScore += 1; }
+        else if (lastFeedback === "well_known") { wellKnownCount++; totalScore += 0.7; }
+        else if (lastFeedback === "familiar") { familiarCount++; totalScore += 0.3; }
+        else if (lastFeedback === "unknown") { unknownCount++; totalScore += 0; }
+      }
+
+      const learnedCount = masteredCount + wellKnownCount + familiarCount + unknownCount;
+      const unlearnedCount = totalWords - learnedCount;
+      const progress = totalWords > 0 ? Math.round((totalScore / totalWords) * 1000) / 10 : 0;
+
+      return {
+        totalWords,
+        mastered: masteredCount,
+        wellKnown: wellKnownCount,
+        familiar: familiarCount,
+        unknown: unknownCount,
+        unlearned: unlearnedCount,
+        progress,
+      };
+    }),
+
+  getMasteredWords: publicQuery
+    .query(async () => {
+      const db = await getDb();
+
+      // 找出所有已掌握的 wordId（跨词库取最佳状态）
+      const allProgress = await db
+        .select()
+        .from(wordProgress);
+
+      const masteredIds = new Set<number>();
+      for (const p of allProgress) {
+        if (p.isMastered || p.lastFeedback === "mastered") {
+          masteredIds.add(p.wordId);
+        }
+      }
+
+      if (masteredIds.size === 0) return [];
+
+      // 查询单词详情
+      const wordList = await db
+        .select({ word: words.word })
+        .from(words)
+        .where(inArray(words.id, Array.from(masteredIds)))
+        .orderBy(sql`${words.frequencyRank} IS NULL, ${words.frequencyRank} ASC`);
+
+      return wordList.map((r: { word: string }) => r.word);
+    }),
+
   markAsMastered: publicQuery
     .input(z.object({
       wordId: z.number(),
       libraryId: z.number(),
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { wordId, libraryId } = input;
 
       const existing = await db
@@ -230,9 +311,9 @@ export const progressRouter = createRouter({
             lastFeedback: "mastered",
             isMastered: true,
             streakCorrect: (existing[0].streakCorrect ?? 0) + 2,
-            lastReviewedAt: new Date().toISOString(),
+            lastReviewedAt: new Date(),
             nextReviewAt: null,
-            updatedAt: new Date().toISOString(),
+            updatedAt: new Date(),
           })
           .where(eq(wordProgress.id, existing[0].id));
       } else {
@@ -243,7 +324,7 @@ export const progressRouter = createRouter({
           lastFeedback: "mastered",
           isMastered: true,
           streakCorrect: 2,
-          lastReviewedAt: new Date().toISOString(),
+          lastReviewedAt: new Date(),
         });
       }
 

@@ -1,19 +1,16 @@
+import "dotenv/config";
 import mysql from "mysql2/promise";
 
 async function seed() {
-  const conn = await mysql.createConnection({
-    host: "ep-t4ni387b5e83b7519dc8.epsrv-t4n281l4mrmemi4zls9a.ap-southeast-1.privatelink.aliyuncs.com",
-    port: 4000,
-    user: "dcHNW5sndVC5m9S.root",
-    password: "dBCYzAzpURYf21dnIMOmyZqxhgnNQWAo",
-    database: "19db8478-6bd2-87a2-8000-09a92f44930c",
-    ssl: { rejectUnauthorized: false },
-  });
+  const conn = await mysql.createConnection(process.env.DATABASE_URL!);
 
+  // 清空数据（按外键依赖顺序）
+  await conn.execute("SET FOREIGN_KEY_CHECKS = 0");
   await conn.execute("DELETE FROM library_words");
   await conn.execute("DELETE FROM word_progress");
   await conn.execute("DELETE FROM words");
   await conn.execute("DELETE FROM word_libraries");
+  await conn.execute("SET FOREIGN_KEY_CHECKS = 1");
 
   const libs = [
     ["四级词汇", "大学英语四级考试核心词汇", "cet4"],
@@ -45,14 +42,14 @@ async function seed() {
       words: [
         ["abandon", "/əˈbændən/", '[{"pos":"v.","meaning":"放弃，抛弃"}]', '[{"phrase":"abandon ship","meaning":"弃船"}]', '[{"sentence":"The crew had to abandon the sinking ship.","translation":"船员们不得不弃船。"}]'],
         ["ability", "/əˈbɪləti/", '[{"pos":"n.","meaning":"能力，才能"}]', '[{"phrase":"have the ability to","meaning":"有能力做..."}]', '[{"sentence":"She has the ability to speak four languages.","translation":"她有能力说四种语言。"}]'],
+        ["absence", "/ˈæbsəns/", '[{"pos":"n.","meaning":"缺席，缺乏"}]', '[{"phrase":"in the absence of","meaning":"在...不在时；缺乏"}]', '[{"sentence":"In the absence of any evidence, he was released.","translation":"在没有任何证据的情况下，他被释放了。"}]'],
         ["absolute", "/ˈæbsəluːt/", '[{"pos":"adj.","meaning":"绝对的，完全的"}]', '[{"phrase":"absolute zero","meaning":"绝对零度"}]', '[{"sentence":"I have absolute confidence in your ability.","translation":"我对你有绝对的信心。"}]'],
+        ["absorb", "/əbˈsɔːrb/", '[{"pos":"v.","meaning":"吸收；使全神贯注"}]', '[{"phrase":"be absorbed in","meaning":"全神贯注于"}]', '[{"sentence":"The sponge can absorb a lot of water.","translation":"海绵能吸收大量的水。"}]'],
+        ["abstract", "/ˈæbstrækt/", '[{"pos":"adj.","meaning":"抽象的"},{"pos":"n.","meaning":"摘要"}]', '[{"phrase":"abstract art","meaning":"抽象艺术"}]', '[{"sentence":"Truth and beauty are abstract concepts.","translation":"真理和美是抽象概念。"}]'],
+        ["abundant", "/əˈbʌndənt/", '[{"pos":"adj.","meaning":"丰富的，大量的"}]', '[{"phrase":"abundant in","meaning":"富于..."}]', '[{"sentence":"The region is abundant in wildlife.","translation":"这个地区野生动物丰富。"}]'],
         ["academic", "/ˌækəˈdemɪk/", '[{"pos":"adj.","meaning":"学术的"}]', '[{"phrase":"academic year","meaning":"学年"}]', '[{"sentence":"She has a strong academic background.","translation":"她有很强的学术背景。"}]'],
+        ["accelerate", "/əkˈseləreɪt/", '[{"pos":"v.","meaning":"加速，促进"}]', '[{"phrase":"accelerate growth","meaning":"加速增长"}]', '[{"sentence":"The car accelerated to overtake the bus.","translation":"汽车加速超越公交车。"}]'],
         ["accept", "/əkˈsept/", '[{"pos":"v.","meaning":"接受，同意"}]', '[{"phrase":"accept responsibility","meaning":"承担责任"}]', '[{"sentence":"I accept your apology.","translation":"我接受你的道歉。"}]'],
-        ["achieve", "/əˈtʃiːv/", '[{"pos":"v.","meaning":"达到，实现"}]', '[{"phrase":"achieve success","meaning":"取得成功"}]', '[{"sentence":"She worked hard to achieve her goal.","translation":"她努力工作以实现目标。"}]'],
-        ["adapt", "/əˈdæpt/", '[{"pos":"v.","meaning":"适应，改编"}]', '[{"phrase":"adapt to","meaning":"适应..."}]', '[{"sentence":"It took time to adapt to the new environment.","translation":"适应新环境需要时间。"}]'],
-        ["admire", "/ədˈmaɪər/", '[{"pos":"v.","meaning":"钦佩，赞赏"}]', '[{"phrase":"admire for","meaning":"因...而钦佩"}]', '[{"sentence":"I admire her courage.","translation":"我钦佩她的勇气。"}]'],
-        ["advantage", "/ədˈvæntɪdʒ/", '[{"pos":"n.","meaning":"优势，好处"}]', '[{"phrase":"take advantage of","meaning":"利用..."}]', '[{"sentence":"He took advantage of the opportunity.","translation":"他利用了这个机会。"}]'],
-        ["adventure", "/ədˈventʃər/", '[{"pos":"n.","meaning":"冒险"}]', '[{"phrase":"go on an adventure","meaning":"去冒险"}]', '[{"sentence":"Life is an adventure.","translation":"人生就是一场冒险。"}]'],
       ],
     },
     {
@@ -122,7 +119,7 @@ async function seed() {
         ["aggregate", "/ˈæɡrɪɡət/", '[{"pos":"n.","meaning":"总计，合计"},{"pos":"adj.","meaning":"合计的"}]', '[{"phrase":"in the aggregate","meaning":"总体上"}]', '[{"sentence":"The aggregate sales exceeded our targets.","translation":"总销售额超过了我们的目标。"}]'],
         ["asset", "/ˈæset/", '[{"pos":"n.","meaning":"资产，财产"}]', '[{"phrase":"fixed asset","meaning":"固定资产"}]', '[{"sentence":"Real estate is considered a stable long-term asset.","translation":"房地产被认为是稳定的长期资产。"}]'],
         ["audit", "/ˈɔːdɪt/", '[{"pos":"n./v.","meaning":"审计，审查"}]', '[{"phrase":"annual audit","meaning":"年度审计"}]', '[{"sentence":"The financial statements are subject to annual audit.","translation":"财务报表需接受年度审计。"}]'],
-        ["benchmark", "/ˈbentʃmɑːrk/", '[{"pos":"n.","meaning":"基准，标杆"}]', '[{"phrase":"benchmark against","meaning":"以...为基准"}]', '[{"sentence":"We benchmark our performance against industry leaders.","translation":"我们以行业领导者为基准评估我们的表现。"}]'],
+        ["benchmark", "/ˈbentʃmɑːk/", '[{"pos":"n.","meaning":"基准，标杆"}]', '[{"phrase":"benchmark against","meaning":"以...为基准"}]', '[{"sentence":"We benchmark our performance against industry leaders.","translation":"我们以行业领导者为基准评估我们的表现。"}]'],
         ["bond", "/bɑːnd/", '[{"pos":"n.","meaning":"债券，契约"}]', '[{"phrase":"government bond","meaning":"政府债券"}]', '[{"sentence":"The company issued bonds to raise capital.","translation":"公司发行债券以筹集资金。"}]'],
         ["capital", "/ˈkæpɪtl/", '[{"pos":"n.","meaning":"资本，资金"}]', '[{"phrase":"working capital","meaning":"营运资本"}]', '[{"sentence":"We need more capital to expand the business.","translation":"我们需要更多资金来扩展业务。"}]'],
         ["commodity", "/kəˈmɑːdəti/", '[{"pos":"n.","meaning":"商品，原材料"}]', '[{"phrase":"commodity market","meaning":"商品市场"}]', '[{"sentence":"Oil is the most traded commodity in the world.","translation":"石油是世界上交易量最大的商品。"}]'],

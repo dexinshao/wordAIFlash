@@ -6,7 +6,7 @@ import { eq, and, inArray, sql } from "drizzle-orm";
 
 export const libraryRouter = createRouter({
   list: publicQuery.query(async () => {
-    const db = getDb();
+    const db = await getDb();
     const libs = await db.select().from(wordLibraries);
     return libs;
   }),
@@ -14,7 +14,7 @@ export const libraryRouter = createRouter({
   getById: publicQuery
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const lib = await db.select().from(wordLibraries).where(eq(wordLibraries.id, input.id));
       return lib[0] ?? null;
     }),
@@ -26,7 +26,7 @@ export const libraryRouter = createRouter({
       mergeToLibraryId: z.number().optional(), // 合并目标词库 ID
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { id, mergeToLibraryId } = input;
 
       // 获取词库信息
@@ -71,7 +71,7 @@ export const libraryRouter = createRouter({
             await db.insert(libraryWords).values({
               libraryId: mergeToLibraryId,
               wordId,
-              addedAt: (link as any).addedAt || new Date().toISOString(),
+              addedAt: (link as any).addedAt || new Date(),
             });
             mergedWords++;
           }
@@ -112,7 +112,7 @@ export const libraryRouter = createRouter({
           .where(eq(libraryWords.libraryId, mergeToLibraryId));
         await db
           .update(wordLibraries)
-          .set({ wordCount: targetCount[0]?.count ?? 0, updatedAt: new Date().toISOString() })
+          .set({ wordCount: targetCount[0]?.count ?? 0, updatedAt: new Date() })
           .where(eq(wordLibraries.id, mergeToLibraryId));
       }
 

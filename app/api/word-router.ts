@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createRouter, publicQuery } from "./middleware";
 import { getDb } from "./queries/connection";
 import { words, libraryWords, wordProgress, wordLibraries } from "@db/schema";
-import { eq, and, like, inArray, sql } from "drizzle-orm";
+import { eq, and, like, inArray, sql, asc } from "drizzle-orm";
 
 // ── 有道词典 API（免费，无需 API Key，返回中文释义） ──────────────────
 
@@ -112,6 +112,27 @@ function parseWordFields(w: Record<string, unknown>) {
   };
 }
 
+// 常见英语派生词后缀（按长度降序，优先匹配更长的后缀）
+const DERIVATIONAL_SUFFIXES = [
+  'fulness', 'iveness', 'ousness', 'isation', 'ization',
+  'tion', 'sion', 'ment', 'ness', 'ity', 'ism', 'ist',
+  'able', 'ible', 'ful', 'less', 'ous', 'ive', 'ent', 'ant',
+  'al', 'ly', 'er', 'or', 'ty', 'ic',
+];
+
+/** 尝试从派生词推断词根，返回词根字符串或 null */
+function deriveStem(word: string): string | null {
+  const lower = word.toLowerCase();
+  for (const suffix of DERIVATIONAL_SUFFIXES) {
+    if (lower.length > suffix.length + 2 && lower.endsWith(suffix)) {
+      const stem = lower.slice(0, lower.length - suffix.length);
+      // 词根至少2个字母
+      if (stem.length >= 2) return stem;
+    }
+  }
+  return null;
+}
+
 async function fetchWordDefinition(word: string): Promise<WordDefinition | null> {
   // 首选有道词典（中文释义）
   const youdaoResult = await fetchWordFromYoudao(word);
@@ -144,7 +165,7 @@ async function enrichWordInBackground(wordId: number, word: string) {
   try {
     const def = await fetchWordDefinition(word);
     if (def && (def.definitions.length > 0 || def.phonetic)) {
-      const db = getDb();
+      const db = await getDb();
       await db
         .update(words)
         .set({
@@ -191,7 +212,7 @@ export const wordRouter = createRouter({
       filter: z.enum(["all", "mastered", "well_known", "familiar", "unknown", "unlearned"]).default("all"),
     }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { libraryId, search, page, pageSize, filter } = input;
       const offset = (page - 1) * pageSize;
 
@@ -273,16 +294,16 @@ export const wordRouter = createRouter({
   getById: publicQuery
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const result = await db.select().from(words).where(eq(words.id, input.id));
       const raw = result[0] ?? null;
       return raw ? parseWordFields(raw as Record<string, unknown>) : null;
     }),
 
   getNextFlashcard: publicQuery
-    .input(z.object({ libraryId: z.number() }))
+    .input(z.object({ libraryId: z.number(), excludeWordId: z.number().optional() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { libraryId } = input;
 
       const lwResult = await db
@@ -312,47 +333,79 @@ export const wordRouter = createRouter({
         return !p || !p.isMastered;
       });
 
-      if (candidates.length === 0) return null;
+      // 排除当前正在学习的单词（预取时避免返回同一张）
+      const { excludeWordId } = input;
+      const filtered = excludeWordId ? candidates.filter((id: number) => id !== excludeWordId) : candidates;
+      if (filtered.length === 0) return null;
 
-      const weights = candidates.map((id: number) => {
+      // 分离：未学过的 vs 已学过需复习的
+      const unlearned = filtered.filter((id: number) => {
         const p = progressMap.get(id);
-        let weight = 1.0;
-
-        if (!p || (p.reviewCount ?? 0) === 0) weight *= 3.0;
-        const nextReview = p?.nextReviewAt;
-        if (nextReview && new Date(nextReview) <= new Date()) weight *= 2.5;
-        const mastery = parseFloat(p?.masteryScore?.toString() ?? "0");
-        weight *= (1.5 - mastery);
-
-        return weight;
+        return !p || (p.reviewCount ?? 0) === 0;
+      });
+      const reviewing = filtered.filter((id: number) => {
+        const p = progressMap.get(id);
+        return p && (p.reviewCount ?? 0) > 0;
       });
 
-      const totalWeight = weights.reduce((a: number, b: number) => a + b, 0);
-      let random = Math.random() * totalWeight;
+      let selectedWordId: number;
 
-      let selectedIndex = 0;
-      for (let i = 0; i < weights.length; i++) {
-        random -= weights[i];
-        if (random <= 0) {
-          selectedIndex = i;
-          break;
+      if (unlearned.length > 0) {
+        // 首次学习：优先按 frequencyRank 顺序出题（频率高的先学）
+        const unlearnedWords = await db
+          .select({ id: words.id, frequencyRank: words.frequencyRank })
+          .from(words)
+          .where(inArray(words.id, unlearned))
+          .orderBy(asc(words.frequencyRank));
+        // 取 frequencyRank 最小（频率最高）的未学单词
+        selectedWordId = unlearnedWords[0].id;
+      } else {
+        // 复习阶段：保持加权随机算法
+        const weights = reviewing.map((id: number) => {
+          const p = progressMap.get(id)!;
+          let weight = 1.0;
+
+          const nextReview = p?.nextReviewAt;
+          if (nextReview && new Date(nextReview) <= new Date()) weight *= 2.5;
+          const mastery = parseFloat(p?.masteryScore?.toString() ?? "0");
+          weight *= (1.5 - mastery);
+
+          return weight;
+        });
+
+        const totalWeight = weights.reduce((a: number, b: number) => a + b, 0);
+        let random = Math.random() * totalWeight;
+
+        let selectedIndex = 0;
+        for (let i = 0; i < weights.length; i++) {
+          random -= weights[i];
+          if (random <= 0) {
+            selectedIndex = i;
+            break;
+          }
         }
+
+        selectedWordId = reviewing[selectedIndex];
       }
 
-      const selectedWordId = candidates[selectedIndex];
       const wordResult = await db.select().from(words).where(eq(words.id, selectedWordId));
       const raw = wordResult[0] ?? null;
       return raw ? parseWordFields(raw as Record<string, unknown>) : null;
     }),
 
-  // ── 异步导入：先快速入库，后台获取释义 ────────────────────────────────
+  // ── 异步导入：先快速入库，有释义的直接写入，无释义的后台获取 ──────────
   import: publicQuery
     .input(z.object({
       libraryId: z.number(),
-      wordList: z.array(z.string().min(1)).max(10000),
+      wordList: z.array(z.object({
+        word: z.string().min(1),
+        phonetic: z.string().optional(),
+        definitions: z.array(z.object({ pos: z.string(), meaning: z.string() })).optional(),
+        frequencyRank: z.number().optional(),
+      })).max(10000),
     }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
       const { libraryId, wordList } = input;
 
       const taskId = `import_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -370,35 +423,65 @@ export const wordRouter = createRouter({
       };
       importTasks.set(taskId, task);
 
-      // 需要后台获取释义的单词列表
+      // 需要后台获取释义的单词列表（txt中没有释义的才进此队列）
       const wordsToEnrich: Array<{ wordId: number; word: string }> = [];
 
-      for (const rawWord of wordList) {
-        const word = rawWord.trim().toLowerCase();
+      for (const item of wordList) {
+        const word = item.word.trim().toLowerCase();
         if (!word) continue;
 
         try {
           // 检查单词是否已存在
+          // 有词频：按 (word, frequencyRank) 查重，允许同一单词不同词频共存
+          // 无词频：按 word 查重（frequencyRank=99999），已存在则跳过
+          const conditions = [eq(words.word, word)];
+          if (item.frequencyRank != null) {
+            conditions.push(eq(words.frequencyRank, item.frequencyRank));
+          } else {
+            conditions.push(eq(words.frequencyRank, 99999));
+          }
           const existing = await db
             .select()
             .from(words)
-            .where(eq(words.word, word));
+            .where(and(...conditions));
 
           let wordId: number;
 
           if (existing.length > 0) {
             wordId = existing[0].id;
+            // 已存在的无词频单词，尝试从词根继承词频
+            if (!item.frequencyRank && existing[0].frequencyRank === 99999) {
+              const stem = deriveStem(word);
+              if (stem) {
+                const stemRows = await db
+                  .select({ frequencyRank: words.frequencyRank })
+                  .from(words)
+                  .where(and(eq(words.word, stem), sql`${words.frequencyRank} > 0`))
+                  .limit(1);
+                if (stemRows.length > 0 && stemRows[0].frequencyRank) {
+                  await db.update(words).set({ frequencyRank: stemRows[0].frequencyRank }).where(eq(words.id, wordId));
+                }
+              }
+            }
           } else {
-            // 先快速创建单词记录（释义待后台填充）
+            // 判断是否有可用的释义
+            const hasDefinitions = item.definitions && item.definitions.length > 0;
             const inserted = await db.insert(words).values({
               word,
-              phonetic: "",
-              definitions: JSON.stringify([{ pos: "", meaning: "释义获取中..." }]),
+              phonetic: item.phonetic || "",
+              definitions: hasDefinitions
+                ? JSON.stringify(item.definitions)
+                : JSON.stringify([{ pos: "", meaning: "释义获取中..." }]),
               phrases: JSON.stringify([]),
               examples: JSON.stringify([]),
+              frequencyRank: item.frequencyRank ?? undefined,
             });
-            wordId = Number((inserted as any).lastInsertRowid);
-            wordsToEnrich.push({ wordId, word });
+            wordId = Number((inserted as any)[0].insertId);
+
+            // 没有释义的才需要后台enrichment
+            if (!hasDefinitions) {
+              wordsToEnrich.push({ wordId, word });
+            }
           }
 
           // 检查是否已关联到该词库
@@ -476,7 +559,7 @@ export const wordRouter = createRouter({
   enrichMissing: publicQuery
     .input(z.object({ libraryId: z.number().optional() }))
     .mutation(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       // 防重复：如果已有正在运行的补全任务，直接返回
       for (const [, task] of importTasks) {
@@ -546,7 +629,7 @@ export const wordRouter = createRouter({
   getMissingCount: publicQuery
     .input(z.object({ libraryId: z.number().optional() }))
     .query(async ({ input }) => {
-      const db = getDb();
+      const db = await getDb();
 
       let query;
       if (input.libraryId) {
