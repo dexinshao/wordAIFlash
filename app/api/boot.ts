@@ -5,6 +5,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "./router";
 import { createContext } from "./context";
 import { env } from "./lib/env";
+import { autoInitDatabase } from "../db/auto-init";
 
 const app = new Hono<{ Bindings: HttpBindings }>();
 
@@ -22,6 +23,11 @@ app.all("/api/*", (c) => c.json({ error: "Not Found" }, 404));
 export default app;
 
 if (env.isProduction) {
+  // 自动初始化数据库（建表 + seed）
+  console.log("[boot] Initializing database...");
+  await autoInitDatabase(env.databaseUrl);
+  console.log("[boot] Database ready.");
+
   const { serve } = await import("@hono/node-server");
   const { serveStaticFiles } = await import("./lib/vite");
   serveStaticFiles(app);

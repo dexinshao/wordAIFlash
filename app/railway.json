@@ -1,6 +1,3 @@
 {
-  "$schema": "https://railway.app/railway.schema.json",
-  "deploy": {
-    "preDeployCommand": "npx drizzle-kit push && npx tsx db/seed-fast.ts"
-  }
+  "$schema": "https://railway.app/railway.schema.json"
 }
