@@ -1,6 +1,6 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE"
+  "deploy": {
+    "preDeployCommand": "npx drizzle-kit push && node dist/db/seed-fast.js"
   }
 }
