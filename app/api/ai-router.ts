@@ -56,7 +56,7 @@ export const aiRouter = createRouter({
       const masteredProgress = await db
         .select({ wordId: wordProgress.wordId })
         .from(wordProgress)
-        .where(eq(wordProgress.isMastered, true));
+        .where(eq(wordProgress.isMastered, 1));
       for (const p of masteredProgress) {
         masteredWordIds.add((p as any).wordId);
       }
