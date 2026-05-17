@@ -1,0 +1,257 @@
+/* 单词列表页面样式 */
+.wordlist-container {
+  min-height: 100vh;
+  background: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部栏 */
+.wordlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-icon {
+  font-size: 20px;
+  color: #6b7280;
+  padding: 4px;
+}
+
+.library-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.word-count {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* 统计栏 */
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.stat-dot.mastered {
+  background: #22c55e;
+}
+
+.stat-dot.learning {
+  background: #f59e0b;
+}
+
+.stat-dot.unlearned {
+  background: #9ca3af;
+}
+
+/* 搜索筛选栏 */
+.search-filter-bar {
+  padding: 12px 16px;
+  background: white;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.search-icon {
+  font-size: 14px;
+  color: #9ca3af;
+  margin-right: 8px;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.filter-tabs {
+  display: flex;
+  padding: 0 16px 12px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 8px;
+}
+
+.filter-tab {
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.filter-tab.active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* 单词列表 */
+.word-list {
+  flex: 1;
+  padding: 12px 16px;
+}
+
+.word-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.word-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.word-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.word-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-right: 8px;
+}
+
+.word-phonetic {
+  font-size: 13px;
+  color: #9ca3af;
+  flex: 1;
+}
+
+.word-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.action-btn:active {
+  opacity: 1;
+}
+
+.action-btn.mastered {
+  opacity: 1;
+}
+
+.word-definitions {
+  margin-bottom: 12px;
+}
+
+.def-item {
+  margin-bottom: 4px;
+}
+
+.def-pos {
+  font-size: 12px;
+  color: #3b82f6;
+  font-weight: 500;
+  margin-right: 6px;
+}
+
+.def-meaning {
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.word-progress {
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.progress-bar {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #f59e0b;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.progress-fill.mastered {
+  background: #22c55e;
+}
+
+.progress-text {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* 底部栏 */
+.bottom-bar {
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-full {
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.btn-full::after {
+  border: none;
+}

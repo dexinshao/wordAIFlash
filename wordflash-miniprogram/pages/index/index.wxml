@@ -1,0 +1,272 @@
+<view class="container">
+  <!-- 全局统计 -->
+  <view class="stats-grid" wx:if="{{globalStats && globalStats.totalWords > 0}}">
+    <view class="stat-card">
+      <text class="stat-value">{{globalStats.totalWords}}</text>
+      <text class="stat-label">总单词</text>
+    </view>
+    <view class="stat-card clickable" bindtap="exportMasteredWords">
+      <text class="stat-value text-success">{{globalStats.mastered}}</text>
+      <text class="stat-label">已掌握</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value text-warning">{{globalStats.learning}}</text>
+      <text class="stat-label">学习中</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{globalStats.progress}}%</text>
+      <text class="stat-label">总进度</text>
+    </view>
+  </view>
+
+  <!-- AI 生成入口 -->
+  <view class="ai-banner" bindtap="showAiDialog">
+    <view class="ai-banner-content">
+      <view class="ai-icon">✨</view>
+      <view class="ai-text">
+        <text class="ai-title">AI 智能生成词库</text>
+        <text class="ai-desc">告诉 AI 你想学什么，自动生成专属词库</text>
+      </view>
+    </view>
+    <view class="ai-arrow">▶</view>
+  </view>
+
+  <!-- 词库列表 -->
+  <view class="section-title">我的词库</view>
+  
+  <view class="library-list">
+    <view class="library-card" wx:for="{{libraries}}" wx:key="id" data-id="{{item.id}}">
+      <view class="library-header">
+        <view class="library-icon {{item.category}}">
+          <text wx:if="{{item.category === 'cet4' || item.category === 'cet6'}}">🎓</text>
+          <text wx:elif="{{item.category === 'toefl'}}">🌐</text>
+          <text wx:elif="{{item.category === 'ielts'}}">📚</text>
+          <text wx:elif="{{item.category === 'tem8'}}">🏆</text>
+          <text wx:elif="{{item.category === 'bec'}}">💼</text>
+          <text wx:elif="{{item.category === 'high_school'}}">🎒</text>
+          <text wx:elif="{{item.category === 'top10000'}}">📊</text>
+          <text wx:elif="{{item.category === 'ai_topic'}}">🤖</text>
+          <text wx:elif="{{item.category === 'mastered'}}">✅</text>
+          <text wx:else>📖</text>
+        </view>
+        <view class="library-info">
+          <text class="library-name">{{item.name}}</text>
+          <text class="library-count">{{item.wordCount}} 个单词</text>
+        </view>
+        <!-- 删除按钮（仅非内置词库） -->
+        <view 
+          class="delete-btn" 
+          wx:if="{{!item.isBuiltin}}"
+          catchtap="showDeleteModal"
+          data-library="{{item}}"
+        >
+          🗑️
+        </view>
+      </view>
+      
+      <text class="library-desc" wx:if="{{item.description}}">{{item.description}}</text>
+      
+      <view class="library-actions">
+        <button class="btn-primary" size="mini" bindtap="startStudy" data-id="{{item.id}}">
+          开始学习
+        </button>
+        <button class="btn-outline" size="mini" bindtap="viewWordList" data-id="{{item.id}}">
+          查看单词
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!isLoading && libraries.length === 0}}">
+    <text>暂无词库，点击上方 AI 生成创建</text>
+  </view>
+</view>
+
+<!-- AI 生成弹窗 -->
+<view class="modal" wx:if="{{showAiModal}}" bindtap="closeAiDialog">
+  <view class="modal-content" catchtap="preventClose">
+    <!-- 头部 -->
+    <view class="modal-header">
+      <view class="modal-title">
+        <text class="modal-icon">✨</text>
+        <view>
+          <text class="modal-title-text">AI 智能生成词库</text>
+          <text class="modal-subtitle" wx:if="{{aiStep === 'input'}}">描述你想学习的主题</text>
+          <text class="modal-subtitle" wx:if="{{aiStep === 'generating'}}">AI 正在生成...</text>
+          <text class="modal-subtitle" wx:if="{{aiStep === 'preview'}}">预览生成的单词</text>
+          <text class="modal-subtitle" wx:if="{{aiStep === 'chooseLib'}}">选择目标词库</text>
+        </view>
+      </view>
+      <text class="modal-close" wx:if="{{!aiGenerating}}" bindtap="closeAiDialog">✕</text>
+    </view>
+
+    <!-- 输入步骤 -->
+    <view class="modal-body" wx:if="{{aiStep === 'input'}}">
+      <textarea
+        class="ai-textarea"
+        placeholder="描述你想学习的主题，例如：&#10;• 我想学习天气相关的词汇&#10;• 旅行出行常用英语单词&#10;• 商务会议和谈判词汇"
+        value="{{aiInput}}"
+        bindinput="onAiInputChange"
+        maxlength="200"
+      />
+      
+      <!-- 快速选择 -->
+      <view class="suggestions">
+        <text class="suggestions-title">快速选择：</text>
+        <view class="suggestion-tags">
+          <text 
+            class="suggestion-tag" 
+            wx:for="{{['天气相关词汇', '旅行出行', '商务会议', '食物烹饪', '医疗健康', '科技互联网']}}"
+            wx:key="*this"
+            bindtap="selectSuggestion"
+            data-suggestion="{{item}}"
+          >{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 排除选项 -->
+      <view class="exclude-section">
+        <view class="exclude-toggle" bindtap="toggleExcludeOptions">
+          <text class="exclude-arrow {{showExcludeOptions ? 'expanded' : ''}}">▶</text>
+          <text>排除已有词库中的单词（可选）</text>
+          <text class="exclude-badge" wx:if="{{excludeLibId}}">已选</text>
+        </view>
+        
+        <view class="exclude-options" wx:if="{{showExcludeOptions}}">
+          <picker bindchange="onExcludeLibChange" value="{{excludeLibId || ''}}" range="{{relatedLibraries}}" range-key="name">
+            <view class="exclude-picker">
+              <text wx:if="{{!excludeLibId}}">选择要排除的词库</text>
+              <text wx:else>{{excludeLibName}}</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <button class="btn-primary btn-full" bindtap="generateWords" disabled="{{!aiInput.trim()}}">
+        ✨ 生成词库
+      </button>
+    </view>
+
+    <!-- 生成中 -->
+    <view class="modal-body generating" wx:if="{{aiStep === 'generating'}}">
+      <view class="generating-icon">✨</view>
+      <text class="generating-text">AI 正在生成单词列表...</text>
+      <text class="generating-subtitle">根据「{{aiInput}}」生成相关词汇</text>
+    </view>
+
+    <!-- 预览步骤 -->
+    <view class="modal-body" wx:if="{{aiStep === 'preview'}}">
+      <view class="preview-header">
+        <text class="preview-tag">🤖 {{generatedTopic}}</text>
+        <text class="preview-count">{{generatedWords.length}} 个单词</text>
+      </view>
+
+      <scroll-view class="word-list" scroll-y>
+        <view 
+          class="word-item" 
+          wx:for="{{generatedWords}}" 
+          wx:key="index"
+          data-index="{{index}}"
+        >
+          <text class="word-text">{{item.word}}</text>
+          <text class="word-def" wx:if="{{item.definition.definitions[0]}}">
+            {{item.definition.definitions[0].meaning}}
+          </text>
+          <text class="word-remove" bindtap="removeGeneratedWord" data-index="{{index}}">✕</text>
+        </view>
+      </scroll-view>
+
+      <view class="preview-actions">
+        <button class="btn-outline" bindtap="closeAiDialog">取消</button>
+        <button class="btn-primary" bindtap="goToChooseLib">下一步：选择词库</button>
+      </view>
+    </view>
+
+    <!-- 选择词库步骤 -->
+    <view class="modal-body" wx:if="{{aiStep === 'chooseLib'}}">
+      <view class="choose-option" bindtap="selectTargetLib" data-id="{{null}}">
+        <view class="option-icon create">➕</view>
+        <view class="option-info">
+          <text class="option-title {{selectedTargetLibId === null ? 'selected' : ''}}">创建新词库</text>
+          <text class="option-desc">创建「🤖 {{generatedTopic}}」词库</text>
+        </view>
+        <text class="option-check" wx:if="{{selectedTargetLibId === null}}">✓</text>
+      </view>
+
+      <view class="section-subtitle" wx:if="{{relatedLibraries.length > 0}}">相关词库：</view>
+      <view 
+        class="choose-option" 
+        wx:for="{{relatedLibraries}}" 
+        wx:key="id"
+        bindtap="selectTargetLib"
+        data-id="{{item.id}}"
+      >
+        <view class="option-icon">📁</view>
+        <view class="option-info">
+          <text class="option-title {{selectedTargetLibId === item.id ? 'selected' : ''}}">{{item.name}}</text>
+          <text class="option-desc">{{item.wordCount}} 个单词</text>
+        </view>
+        <text class="option-check" wx:if="{{selectedTargetLibId === item.id}}">✓</text>
+      </view>
+
+      <button class="btn-primary btn-full" bindtap="createLibrary" disabled="{{aiGenerating}}">
+        {{selectedTargetLibId ? '合并并开始学习' : '创建并开始学习'}}
+      </button>
+    </view>
+  </view>
+</view>
+
+<!-- 删除确认弹窗 -->
+<view class="modal" wx:if="{{showDeleteModal}}" bindtap="closeDeleteModal">
+  <view class="modal-content delete-modal" catchtap="preventClose">
+    <view class="modal-header">
+      <text class="modal-title-text">删除词库</text>
+      <text class="modal-close" bindtap="closeDeleteModal">✕</text>
+    </view>
+    
+    <view class="modal-body">
+      <text class="delete-text">
+        确定要删除「{{deleteTarget.name}}」吗？
+        该词库包含 {{deleteTarget.wordCount}} 个单词。
+      </text>
+
+      <!-- 合并选项 -->
+      <view class="merge-section" wx:if="{{libraries.length > 1}}">
+        <text class="merge-title">将单词合并到其他词库？（可选）</text>
+        
+        <view 
+          class="merge-option {{mergeTargetId === null ? 'selected' : ''}}"
+          bindtap="selectMergeTarget"
+          data-id="{{null}}"
+        >
+          <text>直接删除（不合并）</text>
+        </view>
+
+        <view 
+          class="merge-option {{mergeTargetId === item.id ? 'selected' : ''}}"
+          wx:for="{{libraries}}"
+          wx:key="id"
+          wx:if="{{item.id !== deleteTargetId && item.category !== 'mastered'}}"
+          bindtap="selectMergeTarget"
+          data-id="{{item.id}}"
+        >
+          <text>{{item.name}} ({{item.wordCount}} 词)</text>
+        </view>
+      </view>
+
+      <view class="delete-actions">
+        <button class="btn-outline" bindtap="closeDeleteModal">取消</button>
+        <button class="btn-danger" bindtap="confirmDelete">
+          {{mergeTargetId ? '合并并删除' : '确认删除'}}
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

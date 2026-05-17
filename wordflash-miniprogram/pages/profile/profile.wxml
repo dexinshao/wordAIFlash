@@ -1,0 +1,221 @@
+<view class="container">
+  <!-- 学习统计卡片 -->
+  <view class="stats-card">
+    <view class="stats-header">
+      <text class="stats-title">学习统计</text>
+      <text class="stats-subtitle">数据存储在本地</text>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{globalStats.totalWords || 0}}</text>
+        <text class="stat-label">总单词</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value text-success">{{globalStats.mastered || 0}}</text>
+        <text class="stat-label">已掌握</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value text-warning">{{globalStats.learning || 0}}</text>
+        <text class="stat-label">学习中</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{globalStats.progress || 0}}%</text>
+        <text class="stat-label">总进度</text>
+      </view>
+    </view>
+
+    <view class="stats-footer" wx:if="{{stats}}">
+      <text>连续学习 {{stats.streakDays || 0}} 天</text>
+      <text>累计掌握 {{stats.totalMastered || 0}} 词</text>
+    </view>
+  </view>
+
+  <!-- 设置列表 -->
+  <view class="settings-section">
+    <text class="section-title">学习设置</text>
+    
+    <view class="setting-item" bindtap="setDailyGoal">
+      <view class="setting-left">
+        <text class="setting-icon">🎯</text>
+        <text class="setting-name">每日目标</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-value">{{settings.dailyGoal || 20}} 个</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="setting-item">
+      <view class="setting-left">
+        <text class="setting-icon">🔔</text>
+        <text class="setting-name">学习提醒</text>
+      </view>
+      <view class="setting-right">
+        <switch checked="{{settings.reminderEnabled}}" bindchange="toggleReminder" color="#3b82f6"/>
+      </view>
+    </view>
+
+    <view class="setting-item" wx:if="{{settings.reminderEnabled}}">
+      <view class="setting-left">
+        <text class="setting-icon">⏰</text>
+        <text class="setting-name">提醒时间</text>
+      </view>
+      <view class="setting-right">
+        <picker mode="time" value="{{settings.reminderTime || '20:00'}}" bindchange="setReminderTime">
+          <view class="picker-value">{{settings.reminderTime || '20:00'}}</view>
+        </picker>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 配置 -->
+  <view class="settings-section">
+    <text class="section-title">AI 配置</text>
+    
+    <view class="setting-item" bindtap="showAiConfigModal">
+      <view class="setting-left">
+        <text class="setting-icon">🤖</text>
+        <text class="setting-name">AI 服务配置</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-status {{aiConfig.baseUrl ? 'active' : ''}}">
+          {{aiConfig.baseUrl ? '已配置' : '未配置'}}
+        </text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="settings-section">
+    <text class="section-title">数据管理</text>
+    
+    <view class="setting-item" bindtap="showDataManageModal">
+      <view class="setting-left">
+        <text class="setting-icon">💾</text>
+        <text class="setting-name">导入/导出数据</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-value">{{dataSize}}</text>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="setting-item danger" bindtap="clearAllData">
+      <view class="setting-left">
+        <text class="setting-icon">🗑️</text>
+        <text class="setting-name">清空所有数据</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="settings-section">
+    <view class="setting-item" bindtap="showAbout">
+      <view class="setting-left">
+        <text class="setting-icon">ℹ️</text>
+        <text class="setting-name">关于 WordFlash</text>
+      </view>
+      <view class="setting-right">
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text>WordFlash v1.0.0</text>
+    <text>本地版 · 无需账号</text>
+  </view>
+</view>
+
+<!-- AI 配置弹窗 -->
+<view class="modal" wx:if="{{showAiConfig}}" bindtap="closeAiConfigModal">
+  <view class="modal-content" catchtap="preventClose">
+    <view class="modal-header">
+      <text class="modal-title">AI 服务配置</text>
+      <text class="modal-close" bindtap="closeAiConfigModal">✕</text>
+    </view>
+    
+    <view class="modal-body">
+      <view class="form-group">
+        <text class="form-label">API 地址</text>
+        <input 
+          class="form-input" 
+          placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1"
+          value="{{aiConfig.baseUrl}}"
+          bindinput="onAiUrlChange"
+        />
+        <text class="form-hint">阿里云 DashScope 或其他 OpenAI 兼容 API</text>
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">API Key</text>
+        <input 
+          class="form-input" 
+          placeholder="sk-..."
+          value="{{aiConfig.apiKey}}"
+          bindinput="onAiKeyChange"
+          password
+        />
+        <text class="form-hint">您的 API Key 将存储在本地，不会上传到服务器</text>
+      </view>
+
+      <view class="form-group">
+        <text class="form-label">模型名称</text>
+        <input 
+          class="form-input" 
+          placeholder="qwen-turbo"
+          value="{{aiConfig.model}}"
+          bindinput="onAiModelChange"
+        />
+        <text class="form-hint">推荐使用 qwen-turbo 或其他轻量级模型</text>
+      </view>
+
+      <view class="form-actions">
+        <button class="btn-outline" bindtap="testAiConnection">测试连接</button>
+        <button class="btn-primary" bindtap="saveAiConfig">保存配置</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 数据管理弹窗 -->
+<view class="modal" wx:if="{{showDataManage}}" bindtap="closeDataManageModal">
+  <view class="modal-content" catchtap="preventClose">
+    <view class="modal-header">
+      <text class="modal-title">数据管理</text>
+      <text class="modal-close" bindtap="closeDataManageModal">✕</text>
+    </view>
+    
+    <view class="modal-body">
+      <view class="data-info">
+        <text class="data-size">当前数据大小：{{dataSize}}</text>
+        <text class="data-desc">所有数据存储在本地，您可以导出备份或导入恢复</text>
+      </view>
+
+      <view class="data-actions">
+        <view class="data-action" bindtap="exportData">
+          <view class="action-icon">📤</view>
+          <view class="action-info">
+            <text class="action-name">导出数据</text>
+            <text class="action-desc">将数据复制到剪贴板</text>
+          </view>
+        </view>
+
+        <view class="data-action" bindtap="importData">
+          <view class="action-icon">📥</view>
+          <view class="action-info">
+            <text class="action-name">导入数据</text>
+            <text class="action-desc">从剪贴板导入数据</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

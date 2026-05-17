@@ -121,7 +121,24 @@ Server running on http://localhost:8080/
 
 ---
 
-## 问题四：localhost:8080 是否有问题？
+## 问题四：DATABASE_URL 环境变量缺失
+
+### 现象
+应用启动时报错：`Error: Missing required environment variable: DATABASE_URL`，然后崩溃重启。
+
+### 原因
+Railway MySQL 服务提供的默认变量名是 `MYSQL_URL`，而不是 `DATABASE_URL`。代码中通过 `required("DATABASE_URL")` 强制要求该变量存在，导致应用无法启动。
+
+### 解决方案
+在 wordAIFlash 服务的 Variables 页面手动添加变量引用：
+- **Name**: `DATABASE_URL`
+- **Value**: `${{MySQL.MYSQL_URL}}`
+
+然后重新部署服务。
+
+---
+
+## 问题五：localhost:8080 是否有问题？
 
 ### 现象
 日志中显示 `Server running on http://localhost:8080/`，看起来像是只监听本地地址。
@@ -144,3 +161,4 @@ Server running on http://localhost:8080/
 | **启动时自初始化最可靠** | 将建表和 seed 逻辑写入应用启动流程，每次部署自动执行，无需外部依赖 |
 | **Railway 端口由环境变量控制** | `PORT` 由 Railway 自动注入，代码中应读取 `process.env.PORT` |
 | **SSH 密钥优于 HTTPS** | 自动化环境中 SSH 密钥认证比 HTTPS 更方便，无需交互式输入凭据 |
+| **MySQL 变量引用格式** | Railway MySQL 的变量名是 `MYSQL_URL`，不是 `DATABASE_URL`，需要手动设置 `DATABASE_URL=${{MySQL.MYSQL_URL}}` |

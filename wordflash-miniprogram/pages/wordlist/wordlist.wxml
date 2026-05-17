@@ -1,0 +1,115 @@
+<view class="wordlist-container">
+  <!-- 顶部栏 -->
+  <view class="wordlist-header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">←</text>
+      <text class="library-name">{{library.name}}</text>
+    </view>
+    <text class="word-count">{{words.length}}/{{library.wordCount || 0}}</text>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-bar" wx:if="{{stats}}">
+    <view class="stat-item">
+      <text class="stat-dot mastered"></text>
+      <text>已掌握 {{stats.mastered}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-dot learning"></text>
+      <text>学习中 {{stats.learning}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-dot unlearned"></text>
+      <text>未学习 {{stats.unlearned}}</text>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选 -->
+  <view class="search-filter-bar">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-input" 
+        placeholder="搜索单词..."
+        value="{{searchQuery}}"
+        bindinput="onSearchInput"
+      />
+    </view>
+  </view>
+
+  <view class="filter-tabs">
+    <view 
+      class="filter-tab {{filter === 'all' ? 'active' : ''}}"
+      bindtap="switchFilter"
+      data-filter="all"
+    >全部</view>
+    <view 
+      class="filter-tab {{filter === 'mastered' ? 'active' : ''}}"
+      bindtap="switchFilter"
+      data-filter="mastered"
+    >已掌握</view>
+    <view 
+      class="filter-tab {{filter === 'learning' ? 'active' : ''}}"
+      bindtap="switchFilter"
+      data-filter="learning"
+    >学习中</view>
+    <view 
+      class="filter-tab {{filter === 'unlearned' ? 'active' : ''}}"
+      bindtap="switchFilter"
+      data-filter="unlearned"
+    >未学习</view>
+  </view>
+
+  <!-- 单词列表 -->
+  <scroll-view class="word-list" scroll-y>
+    <view class="word-card" wx:for="{{words}}" wx:key="id">
+      <view class="word-main">
+        <view class="word-header">
+          <text class="word-text">{{item.word}}</text>
+          <text class="word-phonetic" wx:if="{{item.phonetic}}">{{item.phonetic}}</text>
+          <view class="word-actions">
+            <text class="action-btn" bindtap="speakWord" data-word="{{item.word}}">🔊</text>
+            <text 
+              class="action-btn {{item.progress.isMastered ? 'mastered' : ''}}"
+              bindtap="markAsMastered"
+              data-id="{{item.id}}"
+            >{{item.progress.isMastered ? '✅' : '☑️'}}</text>
+          </view>
+        </view>
+        
+        <view class="word-definitions" wx:if="{{item.definitions.length > 0}}">
+          <view class="def-item" wx:for="{{item.definitions}}" wx:for-item="def" wx:key="index">
+            <text class="def-pos" wx:if="{{def.pos}}">{{def.pos}}</text>
+            <text class="def-meaning">{{def.meaning}}</text>
+          </view>
+        </view>
+
+        <view class="word-progress" wx:if="{{item.progress}}">
+          <view class="progress-bar">
+            <view 
+              class="progress-fill {{item.progress.isMastered ? 'mastered' : ''}}"
+              style="width: {{(item.progress.masteryScore || 0) * 100}}%"
+            ></view>
+          </view>
+          <text class="progress-text">
+            {{item.progress.isMastered ? '已掌握' : '学习中'}} · 复习 {{item.progress.reviewCount || 0}} 次
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!isLoading && words.length === 0}}">
+      <text wx:if="{{filter === 'all' && !searchQuery}}">暂无单词</text>
+      <text wx:elif="{{searchQuery}}">未找到匹配的单词</text>
+      <text wx:else>该分类下暂无单词</text>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <button class="btn-primary btn-full" bindtap="startStudy">
+      开始学习 ({{stats.unlearned || 0}} 个待学)
+    </button>
+  </view>
+</view>
