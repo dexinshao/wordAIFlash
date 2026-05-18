@@ -1,0 +1,2347 @@
+vocabulary	
+abbreviation	n.
+ability	n.
+able	adj.
+about	adj & prep.
+above	adj & prep.
+abroad	adv.
+absence	n.
+absent	adj.
+accept	v.
+access	n & v.
+accident	n.
+accommodation	n.
+accompany	v.
+account	n.
+accountancy	n.
+accountant	n.
+accounting	n.
+accounts	n.
+accuracy	n.
+accurate	adj.
+achieve	v.
+acknowledge	v.
+acquaintance	n.
+acquire	v.
+acquisition	n.
+across	prep.
+act	v.
+action	n.
+active	adj.
+activity	n.
+actor	n.
+actual	adj.
+ad	abbr.
+adapt	v.
+add	v.
+addition	n.
+additional	adj.
+address	n & v.
+adjust	v.
+administration	n.
+administrative	adj.
+administrator	n.
+admire	v.
+admission	n.
+admit	v.
+adult	adj & n.
+advance	n.
+advanced	adj.
+advantage	n.
+advert	n.
+advertise	v.
+advertising	n.
+advice	n.
+advise	v.
+aeroplane	n.
+affair	n.
+affect	v.
+afford	v.
+afraid	adj.
+after	prep.
+afternoon	n.
+afterwards	adv.
+again	adv.
+against	prep.
+age	n.
+aged	adj.
+agency	n.
+agenda	n.
+agent	n.
+ago	adv.
+agree	v.
+agricultural	adj.
+agriculture	n.
+aim	n & v.
+air	n.
+air-conditioned	adj.
+air-conditioning	n.
+airline	n.
+airmail	n.
+airplane	n.
+airport	n.
+alarm	n.
+alike	adv & adj.
+all	
+allow	v.
+allowance	n.
+almost	adv.
+alone	adv.
+along	adv & prep.
+aloud	adv.
+alphabet	n.
+already	adv.
+alright	adv/adj.
+also	adv.
+alternative	n & adj.
+although	conj.
+altogether	adv.
+always	adv.
+amazing	adj.
+ambassador	n.
+ambition	n.
+ambitious	adj.
+among	amongst.
+amount	n.
+amusing	adj.
+analyse	v.
+analysis	n.
+and	conj.
+anger	n.
+angry	adj.
+anniversary	n.
+announce	v.
+annoy	v.
+report	n.
+return	n.
+any	adj & pron.
+anybody	pron.
+anyhow	adv.
+anyone	pron.
+anything	pron.
+anyway	adv.
+anywhere	adv.
+AOB	abbr.
+apartment	n.
+apologise	v.
+apology	n.
+appear	v.
+appearance	n.
+applicant	n.
+application	n.
+apply	v.
+appropriate	adj.
+approval	n.
+approve	v.
+approximate	adj.
+architect	n.
+area	n.
+argue	v.
+arithmetic	n.
+around	adv & prep.
+arrange	v.
+arrival	n.
+arrive	v.
+art	n.
+article	n.
+as	adv & conj.
+ASAP	abbr.
+ashamed	adj.
+ask	v.
+aspect	n.
+assembly	n.
+assess	v.
+assistant	n.
+associate	n & v.
+association	n.
+assure	v.
+at	prep.
+first	prep phr.
+last	prep phr.
+least	prep phr.
+once	prep phr.
+attach	v.
+attack	n & v.
+attend	v.
+attendance	n.
+attempt	n & v.
+attention	n.
+attitude	n.
+attract	v.
+attraction	n.
+attractive	adj.
+audience	n.
+audit	v.
+author	n.
+authorise	v.
+authority	n.
+automatic	adj.
+availability	n.
+available	adj.
+average	adj & n.
+avoid	v.
+awake	adj.
+award	n & v.
+aware	adj.
+away	adv.
+back	adv & n.
+background	n.
+backwards	adv.
+bad	adj.
+bag	n.
+ballpoint	adj & n.
+ban	v & n.
+bank	n & v.
+banking	n.
+banknote	n.
+bankrupt	v & adj.
+bankruptcy	n.
+bar	n.
+bargain	n & v.
+base	n & v.
+basement	n.
+basic	adj.
+basis	n.
+basket	n.
+battle	n.
+bay	n.
+be	v.
+beat	v.
+because	conj.
+become	v.
+before	prep.
+beg	v.
+begin	v.
+behave	v.
+behaviour	n.
+behind	prep & adv.
+believe	v.
+bell	n.
+belong	v.
+below	adv & prep.
+bend	n & v.
+beneath	adv & prep.
+benefit	n & v.
+bicycle	n.
+big	adj.
+bike	n.
+bill	Am Eng.
+billion	n.
+biography	n.
+birth	n.
+black	adj.
+blame	n & v.
+blank	adj & n.
+blind	n.
+block	n.
+blue	adj.
+board	n & v.
+boat	n.
+body	n.
+bold	adj.
+bonus	n.
+book	n & v.
+bookcase	n.
+bookkeeping	n.
+bookshop	n.
+boost	n & v.
+boot	n.
+border	n & v.
+bored	adj.
+boring	adj.
+born	adj.
+borrow	v.
+boss	n.
+both	adj & pron.
+bottom	n & adj.
+box	n.
+brain	n.
+branch	n.
+brand	n.
+brave	adj.
+break	n & v.
+breakfast	n.
+brick	n.
+brief	adj.
+briefcase	n.
+bright	adj.
+brilliant	adj.
+bring	v.
+broad	adj.
+brochure	n.
+brush	n & v.
+budget	n & v.
+buffet	adj & n.
+bug	n.
+build	v.
+building	n.
+bulk	n.
+bullet	n & v.
+bureau	n.
+burglar	n.
+burglary	n.
+bus	n.
+business	n.
+busy	adj.
+but	conj.
+button	n.
+buy	n & v.
+buyer	n.
+by	prep.
+cab	n.
+cabinet	n.
+cable	n.
+calculate	v.
+calculator	n.
+calendar	n.
+call	n & v.
+callbox	n.
+calm	adj.
+camera	n.
+campaign	n & v.
+can	n & v.
+canal	n.
+canteen	n.
+capable	adj.
+capacity	n.
+capital	n.
+car	n.
+card	n.
+cardboard	adj & n.
+care	n & v.
+career	n.
+cargo	n.
+carpet	n.
+carry	v.
+case	n.
+cash	n & v.
+cassette	n.
+casual	adj.
+catalogue	n.
+catch	v.
+category	n.
+catering	adj.
+cause	n & v.
+cc	abbr.
+CD	n.
+CD-ROM	n.
+CEO	abbr.
+ceiling	n.
+celebrate	v.
+celebration	n.
+cellar	n.
+Celsius	n.
+cement	n.
+cent	n.
+centigrade	adj.
+centimetre	n.
+central	adj.
+centre	n.
+century	n.
+certain	adj.
+certificate	n.
+chain	n.
+chair	n & v.
+chairman	n.
+chairperson	n.
+chairwoman	n.
+challenge	n & v.
+chance	n.
+change	n & v.
+chapter	n.
+charge	n & v.
+chart	n.
+charter	n.
+chat	n & v.
+cheap	adj.
+cheat	v.
+check	n & v.
+checklist	n.
+cheerful	adj.
+chef	n.
+chemical	adj.
+chemist	n.
+cheque	n.
+chief	adj & n.
+child	n.
+choice	n.
+choose	v.
+circle	n.
+circular	adj.
+circulate	v.
+city	n.
+claim	n & v.
+clarify	v.
+class	n.
+classify	v.
+classroom	n.
+clean	adj & v.
+clear	adj & v.
+clerical	adj.
+clerk	n.
+clever	adj.
+client	n.
+climate	n.
+climb	v.
+clock	n.
+close	adj & v.
+cloth	n.
+clothes	n pl.
+clothing	adj.
+club	n.
+clue	n.
+cm	abbr.
+Co	abbr.
+co-operate	v.
+co-operation	n.
+co-operative	adj & n.
+co-ordinate	v.
+co-ordination	n.
+coach	n & v.
+coal	n.
+coast	n.
+coffee	n.
+coffee-shop	n.
+coin	n.
+cold	adj & n.
+colleague	n.
+collect	v.
+collection	n.
+colour	n & v.
+combination	n.
+combine	v.
+come	v.
+comfort	n.
+command	n & n.
+comment	n & v.
+commerce	n.
+commercial	n & adj.
+commission	n.
+commit	v.
+committee	n.
+common	adj.
+communicate	v.
+communication	n.
+commute	v.
+compact	adj.
+company	n.
+compare	v.
+comparison	n.
+compete	v.
+competition	n.
+competitive	adj.
+competitor	n.
+complain	v.
+complaint	n.
+complete	v & adj.
+compliment	n & v.
+component	n.
+composition	n.
+compromise	n & v.
+computer	n.
+concentrate	v.
+concentration	n.
+concern	n & v.
+concert	n.
+conclusion	n.
+condition	n.
+conference	n.
+confidence	n.
+confident	adj.
+confidential	adj.
+confirm	v.
+confirmation	n.
+congratulations	n & int.
+connect	v.
+connecting	flight.
+connection	n.
+conservative	adj.
+consider	v.
+consignment	n.
+consist	v.
+constant	adj.
+construct	v.
+construction	adj.
+consul	n.
+consulate	n.
+consult	v.
+consultancy	n.
+consultant	n.
+consultation	n.
+consumer	n.
+contact	n & v.
+contain	v.
+contest	n & v.
+continent	n.
+continue	v.
+contract	n & v.
+contribute	v.
+contribution	n.
+control	n & v.
+convenience	n.
+convenient	adj.
+conversation	n.
+cool	adj & v.
+copy	n & v.
+corner	n.
+corporate	adj.
+correct	adj & v.
+correction	n.
+correspond	v.
+correspondence	n.
+corridor	n.
+cost	n & v.
+cotton	n.
+count	v.
+country	n.
+countryside	n.
+couple	n.
+courage	n.
+courier	n.
+course	n.
+court	n.
+cover	n & v.
+crash	n & v.
+create	v.
+creation	n.
+creative	adj.
+credit	n & v.
+crime	n.
+criminal	n.
+criticise	v.
+crop	n.
+cross	adj, n & v.
+crossing	n.
+crossroads	n.
+crowd	n.
+crowded	adj.
+culture	n.
+cup	n.
+cupboard	n.
+curious	adj.
+currency	n.
+current	adj.
+curriculum	n.
+curve	n & v.
+custom	n.
+customer	n.
+customs	n.
+cut	n & v.
+cut-price	adj.
+daily	adj & adv.
+damage	n & v.
+danger	n.
+dangerous	adj.
+dark	adj & n.
+data	n.
+database	n.
+date	n & v.
+date-stamp	n & v.
+day	n.
+off	n.
+deadline	n.
+deadlock	n.
+deal	n & v.
+dear	adj & int.
+debit	n & v.
+debt	n.
+decide	v.
+decimal	adj & n.
+decision	n.
+decision-making	n.
+declare	v.
+decline	n & v.
+decrease	n & v.
+deduct	v.
+deep	adj & adv.
+defeat	n & v.
+defective	adj.
+defence	n.
+defend	v.
+definite	adj.
+degree	n.
+delay	n & v.
+delegate	n & v.
+delete	v.
+deletion	n.
+delighted	adj.
+deliver	v.
+delivery	n.
+demand	n & v.
+demonstrate	v.
+demonstration	n.
+deny	v.
+dep	abbr.
+depart	v.
+departure	n.
+depend	v.
+deposit	n & v.
+depressed	adj.
+depression	n.
+Dept	abbr.
+depth	n.
+describe	v.
+description	n.
+desert	n.
+design	n & v.
+desk	n.
+desktop	adj & n.
+despatch	n & v.
+despite	prep.
+destination	n.
+destroy	v.
+detail	n.
+develop	v.
+diagram	n.
+dial	n & v.
+diary	n.
+dictate	v.
+dictation	n.
+dictionary	n.
+die	v.
+differ	v.
+difference	n.
+different	adj.
+difficult	adj.
+dig	v.
+digital	adj.
+dinner	n.
+dip	n & v.
+diploma	n.
+direct	adj & v.
+direction	n.
+directory	n.
+disabled	adj & n.
+disappoint	v.
+discount	n & v.
+discover	v.
+discuss	v.
+discussion	n.
+dislike	n & v.
+dismiss	v.
+dispatch	n & v.
+display	n & v.
+distance	n.
+distant	adj.
+distribute	v.
+distribution	n.
+district	n.
+disturb	v.
+divide	v.
+division	n.
+do	v.
+document	n.
+documentary	adj & n.
+documentation	n.
+dollar	n.
+domestic	adj.
+door	n.
+door-to-door	adj.
+double	adj & v.
+doubt	n & v.
+down	
+downstairs	adv.
+downturn	n.
+downward	adj.
+dozen	n.
+drama	n.
+dramatic	adj.
+dramatically	adv.
+draw	v.
+drawer	n.
+dream	n & v.
+dress	n & v.
+drink	n & v.
+drive	n & v.
+drop	n & v.
+dry	adj & v.
+DTP	abbr.
+due	adv & adj.
+dull	adj.
+duplicate	n & v.
+during	prep.
+duty	n.
+DVD	n.
+each	adj & pron.
+eager	adj.
+early	adj & adv.
+earn	v.
+earnings	n pl.
+east	
+eastern	adj.
+easy	adj.
+eat	v.
+e-commerce	n.
+economic	adj.
+economical	adj.
+economics	n.
+economy	n.
+edge	n.
+educate	v.
+education	n.
+effect	n.
+effective	adj.
+efficient	adj.
+effort	n.
+either	conj.
+elect	v.
+electrical	adj.
+electricity	n.
+electronic	adj.
+electronics	n.
+elementary	adj.
+elevator	Am Eng.
+else	adv.
+email	n & v.
+embarrass	v.
+embassy	n.
+emergency	n.
+employ	v.
+employee	n.
+empty	adj & v.
+enable	v.
+enclose	v.
+encourage	v.
+end	n & v.
+engaged	adj.
+engagement	n.
+engine	n.
+engineer	n.
+engineering	n.
+English	adj & n.
+enjoy	v.
+enormous	adj.
+enough	
+enquire	v.
+enquiry	n.
+enrol	v.
+ensure	v.
+enter	v.
+entertain	v.
+enthusiasm	n.
+enthusiastic	adj.
+entire	adj.
+entrance	n.
+entry	v.
+envelope	n.
+environment	n.
+environmental	adj.
+equal	adj & v.
+equip	v.
+escalator	n.
+escape	n & v.
+especially	adv.
+essential	adj.
+establish	v.
+estimate	n & v.
+EU	abbr.
+exchange	v.
+Euro	n.
+even	adv.
+event	n.
+ever	adv.
+everything	n.
+everywhere	adv.
+exact	adj.
+exam	abbr.
+examination	n.
+examine	v.
+example	n.
+exceed	v.
+excellent	adj.
+except	
+excess	n.
+excited	adj.
+exciting	adj.
+exclude	v.
+excluding	prep.
+excuse	n & v.
+executive	n & adj.
+exercise	n & v.
+exhibit	n & v.
+exhibition	n.
+exist	v.
+expansion	n.
+expect	v.
+expectation	n.
+expenditure	n.
+expensive	adj.
+experience	n.
+experienced	adj.
+experiment	n & v.
+expert	n.
+explain	v.
+explanation	n.
+explode	v.
+explore	v.
+export	n & v.
+express	adj & v.
+extend	v.
+extension	n.
+external	adj.
+extraordinary	adj.
+extremely	adv.
+eye	n.
+facilities	n pl.
+facing	v & prep.
+fact	n.
+factor	n.
+factory	n.
+fail	v.
+failure	n.
+faint	adj.
+fair	adj & n.
+faithfully	adv.
+fall	n & v.
+false	adj.
+family	n.
+famous	adj.
+fan	n.
+fantastic	adj.
+far	adv.
+fare	n.
+fashion	n.
+fast	adj & adv.
+fasten	v.
+fault	n.
+favourite	adj & n.
+fax	n & v.
+fear	n & v.
+fee	n.
+feedback	n.
+feel	v.
+female	n & adj.
+ferry	n.
+festival	v.
+fetch	v.
+few	adj.
+fiction	n.
+field	n.
+fight	n & v.
+figure	n.
+file	n & v.
+fill	v.
+film	n & v.
+final	adj.
+finalise	v.
+finance	n & v.
+financial	adj.
+find	v.
+fine	adj, n & v.
+finish	n & v.
+fire	n & v.
+firm	adj & n.
+fit	adj & v.
+fitness	n & adj.
+fix	v.
+flag	n.
+flat	adj & n.
+fleet	n.
+flexible	adj.
+flexibility	n.
+flight	n.
+float	v.
+flood	n & v.
+floor	n.
+flotation	n.
+flowchart	n.
+fluctuate	v.
+fluctuation	n.
+fly	v.
+focus	n & v.
+fold	n & v.
+follow	v.
+following	adj & prep.
+fond	adj.
+food	n.
+for	prep.
+forbid	v.
+force	n & v.
+forecast	n & v.
+foreign	adj.
+foreigner	n.
+foreman	n.
+forget	v.
+forgetful	adj.
+forgive	v.
+form	n & v.
+formal	adj.
+former	adj.
+fortnight	n.
+fortunate	adj.
+forward	v.
+founder	n.
+free	adj.
+freelance	adj & v.
+freeze	n & v.
+freight	n & v.
+frequent	adj.
+fresh	adj.
+fridge	n.
+friend	n.
+frighten	v.
+from	prep.
+front	adj & n.
+fuel	n.
+full	adj.
+full-time	adj.
+fun	n.
+function	n & v.
+fund	n & v.
+funding	n.
+funny	adj.
+furnish	v.
+furniture	n.
+future	adj & n.
+gain	n & v.
+gallery	n.
+gallon	n.
+game	n.
+gap	n.
+garage	n.
+gas	n.
+gate	n.
+general	adj.
+generous	adj.
+gentle	adj.
+gentleman	n.
+genuine	adj.
+geography	n.
+get	v.
+gift	n.
+girl	n.
+give	v.
+glad	adj.
+glance	n & v.
+glass	n & adj.
+glasses	n pl.
+global	adj.
+go	v.
+goal	n.
+gold	adj & n.
+good	adj.
+goodbye	int.
+goods	n pl.
+govern	v.
+grade	n & v.
+gradual	adj.
+graduate	n & v.
+graduation	n.
+grammar	n.
+grant	n & v.
+graph	n.
+graphics	n.
+grateful	adj.
+great	adj.
+green	adj.
+greet	v.
+grey	adj.
+gross	adj.
+ground	adj & n.
+group	n & v.
+grow	v.
+growth	n.
+guarantee	n & v.
+guard	n & v.
+guess	n & v.
+guest	n.
+guest-house	n.
+guide	n & v.
+guilty	adj.
+gymnasium	n.
+habit	n.
+hair	n.
+half	
+hall	n.
+hand	n & v.
+handbag	n.
+handbook	n.
+handle	n & v.
+handwriting	n.
+hang	v.
+happen	v.
+happy	adj.
+harbour	n.
+hard	adj & adv.
+hardly	adv.
+hardware	n.
+hate	v.
+head	n & v.
+headline	n.
+headquarters	n.
+health	n.
+hear	v.
+heart	n.
+heat	n & v.
+heating	n.
+heavy	adj.
+height	n.
+helpline	n.
+her	adj & pron.
+here	adv.
+hers	pron.
+herself	pron.
+hi-fi	n.
+hidden	adj.
+hide	v.
+high	
+highway	n.
+hill	n.
+him	pron.
+himself	pron.
+hire	n & v.
+his	adj & pron.
+history	n.
+hit	n & v.
+hobby	n.
+hold	v.
+hole	n.
+holiday	n.
+home	adv & n.
+honest	adj.
+hope	n & v.
+horrible	adj.
+hospitality	n.
+host	n.
+hot	adj.
+hotel	n.
+hour	n.
+house	n.
+how	adv.
+however	adv.
+huge	adj.
+human	n & adj.
+hundred	n.
+hurry	n & v.
+hr	abbr.
+ice	n.
+idea	n.
+identity	n.
+ID	abbr.
+if	conj.
+ill	adj.
+image	n.
+imagination	n.
+imagine	v.
+immediate	adj.
+immigration	n.
+import	v.
+importance	n.
+important	adj.
+impossible	adj.
+impress	v.
+impression	n.
+impressive	adj.
+improve	v.
+in	adv & prep.
+incentive	n.
+inch	n.
+inconvenience	n.
+inconvenient	adj.
+incorrect	adj.
+increase	n & v.
+indeed	adv.
+independent	adj.
+index	n.
+indicate	v.
+indication	n.
+individual	adj & n.
+indoor	adj.
+indoors	adv.
+industrial	adj.
+industry	n.
+inflation	n.
+influence	n & v.
+inform	v.
+information	n.
+informal	adj.
+inhabitant	n.
+in-house	adj & adv.
+injure	v.
+injury	n.
+ink	n.
+innovation	n.
+innovative	adj.
+inquiry	n.
+inside	
+insist	v.
+inspect	v.
+inspection	n.
+install	v.
+installation	n.
+instalment	n.
+instance	n.
+instead	adv.
+instructions	n.
+instructor	n.
+insurance	n.
+insure	v.
+intelligent	adj.
+intend	v.
+interest	n & v.
+intermediate	adj.
+internal	adj.
+international	adj.
+internet	n.
+interpret	v.
+interrupt	v.
+interval	n.
+interview	v.
+into	prep.
+introduce	v.
+introduction	n.
+introductory	adj.
+invent	v.
+invention	n.
+invest	v.
+invitation	n.
+invite	v.
+invoice	n & v.
+involve	v.
+iron	n.
+island	n.
+issue	n & v.
+IT	abbr.
+item	n.
+its	pron.
+itself	pron.
+jealous	adj.
+jet	plane.
+job	n.
+join	v.
+joint	adj.
+joke	n.
+journal	n.
+journalist	n.
+journey	n.
+judge	n & v.
+jump	n & v.
+junction	n.
+just	adv.
+keen	adj.
+keep	v.
+key	n & adj.
+keyboard	n.
+kg	abbr.
+km	abbr.
+kilometre	n.
+kph	abbr.
+kind	adj & n.
+kiosk	n.
+kitchen	n.
+knock	n & v.
+know	v.
+knowledge	n.
+label	n & v.
+lab	abbr.
+laboratory	n.
+labour	n.
+lack	n & v.
+ladder	n.
+lady	n.
+lamp	n.
+landlady	n.
+landlord	n.
+language	n.
+laptop	n.
+large	adj.
+laser	n.
+printer	n.
+later	adv.
+laugh	n & v.
+launch	v & n.
+laundry	n.
+lavatory	n.
+law	n.
+lawyer	n.
+lay	v.
+layout	n.
+lazy	adj.
+lb	abbr.
+lead	v.
+leader	n.
+leadership	n.
+leading	adj.
+leaflet	n.
+learn	v.
+leave	n & v.
+lecture	n & v.
+left	
+legal	adj.
+leisure	n.
+lend	v.
+length	n.
+less	
+lesson	n.
+let	v.
+letter	n.
+liberal	adj.
+library	n.
+licence	n.
+lie	n & v.
+life	n.
+lifestyle	n.
+lift	n & v.
+light	adj, n & v.
+like	prep & v.
+likely	adj.
+limit	n & v.
+line	n.
+link	n & v.
+liquid	n & adj.
+list	n & v.
+listen	v.
+litre	n.
+little	adj & pron.
+live	v & adj.
+living	adj.
+load	n & v.
+loan	n.
+local	adj.
+locate	v.
+location	n.
+lock	n & v.
+locker	n.
+logo	n.
+lonely	adj.
+long	adj.
+look	n & v.
+loose	adj.
+lorry	n.
+lose	v.
+loss	n.
+lot	n.
+lounge	n.
+love	n & v.
+low	
+lower	v.
+loyal	adj.
+loyalty	n.
+luck	n.
+lunchtime	n.
+luxury	n & adj.
+MA	abbr.
+machine	n.
+machinery	n.
+mad	adj.
+madam	n.
+magazine	n.
+mail	n.
+mailbox	Am Eng.
+mailshot	n.
+main	adj.
+maintain	v.
+maintenance	n.
+major	adj.
+majority	n.
+make	n & v.
+male	adj & n.
+man	n.
+manage	v.
+managerial	adj.
+manner	n.
+margin	n.
+mark	n & v.
+market	n & v.
+marketplace	n.
+marketing	n.
+married	adj.
+mass	adj.
+mass-produce	v.
+master	v.
+match	n & v.
+mate	n.
+material	n.
+mathematics	n.
+maths	abbr.
+matter	n & v.
+mature	adj.
+max	abbr.
+maximum	adj & n.
+may	v.
+maybe	adv.
+MBA	abbr.
+MD	abbr.
+me	pron.
+meal	n.
+mean	v.
+meaning	n.
+means	n.
+measure	v.
+mechanic	n.
+media	n.
+medicine	n.
+medium	adj.
+meet	v.
+member	n.
+membership	n.
+memo	abbr.
+memorandum	n.
+memory	n.
+mend	v.
+mention	n & v.
+menu	n.
+merge	v.
+message	n.
+metal	n.
+method	n.
+metre	n.
+microphone	n.
+midday	n.
+middle	adj & n.
+middle-aged	adj.
+midnight	n.
+might	v.
+millimetre	n.
+mind	n & v.
+mine	pron.
+mineral	adj.
+min	abbr.
+minimum	adj & n.
+minor	adj.
+minus	conj.
+minute	n.
+minutes	n & pl.
+misc	abbr.
+miscellaneous	adj.
+miserable	adj.
+miss	n & v.
+mistake	n.
+misunderstand	v.
+mix	n & v.
+mixture	n.
+mobile	adj & n.
+model	adj & n.
+modern	adj.
+moment	n.
+money	n.
+monopoly	n.
+month	n.
+more	
+morning	n.
+most	
+motivate	v.
+motivation	n.
+motor	n.
+motorbike	n.
+motorcycle	n.
+motorway	n.
+mountain	n.
+mouse	n.
+move	n & v.
+movie	Am Eng.
+mph	abbr.
+Mr	n.
+Mrs	n.
+Ms	n.
+much	
+multinational	adj & n.
+multiply	v.
+music	n.
+musical	adj & n.
+musician	n.
+must	v.
+my	pron & adj.
+myself	pron.
+name	n & v.
+narrow	adj.
+national	adj.
+nationality	n.
+nationwide	adj.
+natural	adj.
+nature	n.
+NB	abbr.
+NE	abbr.
+NW	abbr.
+near	adv & prep.
+neat	adj.
+necessary	adj.
+need	n & v.
+negative	adj.
+negotiable	adj.
+negotiate	v.
+negotiation	n.
+neighbour	n.
+neighbourhood	n.
+neither	adj & pron.
+nervous	adj.
+net	n & adj.
+year	adj.
+network	v & n.
+never	adv.
+new	adj.
+news	n.
+newsagent	n.
+newsletter	n.
+newspaper	n.
+next	
+nice	adj & adv.
+night	n.
+nil	n.
+no	adv.
+nobody	n & pron.
+noise	n.
+none	
+nor	conj.
+normal	adj.
+north	
+notepaper	n.
+nothing	n & pron.
+notice	n & v.
+notice-board	n.
+now	adv.
+nowadays	adv.
+nowhere	adv.
+nr	abbr.
+nuclear	adj.
+number	n.
+nylon	adj & n.
+object	n & v.
+objective	n.
+observe	v.
+obtain	v.
+occupation	n.
+occur	v.
+of	prep.
+offer	n & v.
+office	n.
+officer	n.
+official	adj & n.
+often	adv.
+OHP	abbr.
+OHT	abbr.
+oil	n & v.
+old	adj.
+omit	v.
+on	adv & prep.
+one	n & pron.
+one-way	adj.
+oneself	pron.
+only	adj & adv.
+onto	prep.
+hours	n.
+operation	n.
+opinion	n.
+opportunity	n.
+oppose	v.
+opposite	
+option	n.
+or	conj.
+order	
+ordinary	adj.
+organisation	n.
+organise	v.
+original	adj.
+originality	n.
+other	adj & pron.
+ought	v.
+ounce	n.
+our	adj.
+ours	pron.
+ourselves	pron.
+out	adv.
+outdoor	adj.
+outdoors	adv.
+outlet	n.
+output	n & v.
+outside	
+oval	adj.
+over	adv & prep.
+overall	adj.
+overalls	n.
+overdraft	n.
+overdrawn	adj.
+overheads	n.
+overnight	adj & adv.
+overseas	adj & adv.
+overtake	v.
+overtime	n.
+owe	v.
+own	adj & v.
+PA	abbr.
+pc	abbr.
+pack	n & v.
+package	n & v.
+packaging	n.
+packet	n.
+packing	n.
+page	n.
+paint	n & v.
+pair	n.
+paper	n.
+paperclip	n.
+paperwork	n.
+paragraph	n.
+parcel	n.
+pardon	n.
+park	n & v.
+parking	n.
+parliament	n.
+part	n.
+participant	n.
+participate	v.
+participation	n.
+particular	adj.
+partner	n.
+party	n.
+pass	n & v.
+passenger	n.
+passport	n.
+past	
+path	n.
+patient	adj.
+pattern	n.
+pause	n & v.
+pavement	n.
+pay	n & v.
+payroll	n.
+peace	n.
+peak	n & v.
+pen	n.
+pence	n.
+pencil	n.
+pension	n.
+people	n pl.
+per	prep.
+percentage	n.
+perfect	adj.
+perform	v.
+performance	n.
+perhaps	adv.
+period	n.
+permanent	adj.
+permission	n.
+permit	v & n.
+person	n.
+personality	n.
+personnel	n.
+persuade	v.
+petrol	n.
+pharmaceutical	adj.
+pharmacy	n.
+phase	n.
+phone	n & v.
+photocopier	n.
+photocopy	n & v.
+photograph	n & v.
+photography	n.
+pick	v.
+picture	n.
+piece	n.
+pile	n & v.
+pilot	n.
+pin	n & v.
+pipe	n.
+pity	n.
+place	n & v.
+plain	adj.
+plan	n & v.
+plane	n.
+planning	n.
+plant	n & v.
+plastic	adj & n.
+platform	n.
+play	n & v.
+plc	abbr.
+pleasant	adj.
+please	int & v.
+pleasure	n.
+plenty	adj & pron.
+plug	n.
+plus	conj.
+pm	adv.
+pocket	n.
+point	n & v.
+police	n.
+policy	n.
+polite	adj.
+political	adj.
+politician	n.
+politics	n.
+pollution	n.
+pool	n.
+poor	adj.
+popular	adj.
+population	n.
+port	n.
+portable	adj.
+porter	n.
+position	n.
+positive	adj.
+possibility	n.
+possible	adj.
+post	n & v.
+postage	n.
+postcard	n.
+postcode	n.
+poster	n.
+postman	n.
+postpone	v.
+potential	n & adj.
+pound	n.
+pour	v.
+power	n.
+PR	abbr.
+practice	n.
+practise	v.
+praise	n & v.
+precious	adj.
+predict	v.
+prediction	n.
+prefer	v.
+preference	n.
+preliminary	adj.
+premises	n.
+preparation	n.
+prepare	v.
+prescription	n.
+present	adj, n & v.
+presentation	n.
+president	n.
+press	n & v.
+pretty	adj & adv.
+prevent	v.
+previous	adj.
+price	n & v.
+primary	adj.
+principal	n & adj.
+print	n & v.
+printout	n.
+priority	n.
+private	adj.
+prize	n.
+probable	adj.
+problem	n.
+procedure	n.
+process	n & v.
+produce	n & v.
+product	n.
+production	n.
+productive	adj.
+productivity	n.
+profession	n.
+professional	adj & n.
+professor	n.
+profile	n & v.
+profit	n.
+profitability	n.
+profitable	adj.
+programme	n & v.
+progress	n.
+project	n.
+promise	n & v.
+promote	v.
+promotion	n.
+promotional	adj.
+prompt	adj.
+pronounce	v.
+pronunciation	n.
+proof	n.
+proofread	v.
+proper	adj.
+property	n.
+proportion	n.
+proposal	n.
+propose	v.
+protect	v.
+protection	n.
+proud	adj.
+prove	v.
+provide	v.
+PS	abbr.
+PTO	abbr.
+public	adj & n.
+publication	n.
+publicise	v.
+publicity	n.
+publish	v.
+pull	n & v.
+punctual	adj.
+punish	v.
+pupil	n.
+purchase	n & v.
+pure	adj.
+purpose	n & adj.
+push	n & v.
+put	v.
+qualification	n.
+qualify	v.
+quality	n.
+quantity	n.
+quarrel	n & v.
+quarter	n.
+quay	n.
+query	n & v.
+question	n & v.
+questionnaire	n.
+queue	n & v.
+quick	adj.
+quiet	adj.
+quite	adv.
+quiz	n.
+quotation	n.
+quote	n & v.
+race	n & v.
+radio	n.
+range	n & v.
+rank	n & v.
+rapid	adj.
+rare	adj.
+rate	n.
+rather	adv.
+Rd	abbr.
+re	abbr.
+reach	v.
+react	v.
+reaction	n.
+read	v.
+ready	adj.
+real	adj.
+realise	v.
+rearrange	v.
+reason	n.
+receipt	n.
+receive	v.
+receiver	n.
+recent	adj.
+reception	n.
+receptionist	n.
+reclaim	v.
+recognise	v.
+recommend	v.
+recommendation	n.
+record	n, adj & v.
+recorder	n.
+recover	v.
+recovery	n.
+recruit	n & v.
+red	adj & n.
+reduce	v.
+reduction	n.
+redundant	adj.
+ref	abbr.
+refer	v.
+reference	n.
+refrigerator	n.
+refund	v & n.
+refurbish	v.
+refuse	v.
+regional	adj.
+register	v.
+registration	n.
+regret	v.
+regular	adj.
+regulations	n pl.
+reject	v.
+rejection	n.
+relation	n.
+relax	v.
+relevant	adj.
+reliable	adj.
+reliability	n.
+relief	n.
+relocate	v.
+relocation	n.
+rely	v.
+remain	v.
+remember	v.
+remind	v.
+remove	v.
+renew	v.
+rent	n & v.
+reorganisation	n.
+rep	abbr.
+repair	n & v.
+repay	v.
+repeat	n, v & adj.
+replace	v.
+reply	n & v.
+represent	v.
+representative	n.
+reputation	n.
+request	n & v.
+require	v.
+rescue	n & v.
+research	n & v.
+reservation	n.
+reserve	v.
+resident	n.
+residential	adj.
+resign	v.
+resignation	n.
+resources	n.
+respect	n & v.
+respond	v.
+response	n.
+responsibility	n.
+responsible	adj.
+rest	n & v.
+restaurant	n.
+result	n & v.
+retail	n & v.
+retain	v.
+retire	v.
+revenue	n.
+review	n & v.
+revise	v.
+reward	n & v.
+rich	adj & n.
+ride	n & v.
+right	
+ring	n & v.
+rise	n & v.
+risk	n & v.
+rival	n & adj.
+river	n.
+road	n.
+role	n.
+roof	n.
+room	n.
+rough	adj.
+round	
+roundabout	n.
+route	n.
+routine	n.
+row	n.
+RSVP	abbr.
+rubber	adj & n.
+rubbish	n.
+ruin	n & v.
+rule	n & v.
+run	v.
+sad	adj.
+SAE	abbr.
+safe	n & adj.
+safety	n.
+salary	n.
+sale	n.
+sales	n.
+same	adj & pron.
+sample	n.
+satisfaction	n.
+satisfactory	adj.
+satisfied	adj.
+save	v.
+say	v.
+scale	n.
+schedule	n & v.
+scheme	n.
+school	n.
+science	n.
+scientific	adj.
+scissors	n.
+screen	n & v.
+screw	n & v.
+sea	n.
+seal	v.
+search	n & v.
+season	n.
+seasonal	
+seat	n & v.
+seatbelt	n.
+sec	abbr.
+second	adj & n.
+secondary	adj.
+secret	n & adj.
+secretarial	adj.
+secretary	n.
+section	n.
+sector	n.
+secure	v & adj.
+security	n.
+see	v.
+seem	v.
+seldom	adv.
+select	v.
+selection	n.
+self-employed	adj.
+self-service	adj.
+sell	v.
+seminar	n.
+send	v.
+senior	adj.
+sensible	adj.
+sentence	n.
+separate	adj & v.
+series	n.
+serious	adj.
+servant	n.
+serve	v.
+service	n & v.
+station	n.
+agreement	n.
+settle	v.
+several	adj.
+sex	n.
+shake	n & v.
+shall	v.
+shallow	adj.
+shame	n.
+shape	n & v.
+share	n & v.
+shareholder	n.
+shares	n & pl.
+sharp	adj.
+she	pron.
+sheet	n.
+shelf	n.
+shift	n.
+shine	v.
+ship	n & v.
+shipping	n.
+shock	n.
+shop	n & v.
+short	adj.
+shortage	n.
+should	v.
+shout	n & v.
+show	n & v.
+shower	n.
+shut	adj & v.
+shy	adj.
+sick	adj.
+side	n.
+sight	n.
+sightseeing	n.
+sign	n & v.
+signal	n & v.
+signature	n.
+significant	adj.
+signpost	n.
+silence	n.
+silent	adj.
+silk	n & adj.
+silver	n & adj.
+similar	adj.
+simple	adj.
+since	
+sincerely	adv.
+single	n & adj.
+Sir	n.
+sit	v.
+site	n.
+situate	v.
+situation	n.
+size	n.
+skill	n.
+skilled	adj.
+sky	n.
+sleep	n & v.
+slight	adj.
+slim	adj.
+slow	adj.
+small	adj.
+smart	adj.
+smell	n & v.
+smile	n & v.
+smoke	n & v.
+smooth	adj.
+snack	n.
+so	adv & conj.
+so-so	adj.
+social	adj.
+society	n.
+soft	adj.
+software	n.
+sole	adj.
+solid	adj.
+solution	n.
+solve	v.
+some	adj & adv.
+somebody	n & pron.
+someone	n & pron.
+something	n & pron.
+sometimes	adv.
+somewhere	adv.
+soon	adv.
+sorry	adj.
+sort	n & v.
+sound	n & v.
+south	
+souvenir	n.
+space	n.
+spare	adj & v.
+speak	v.
+speaker	n.
+special	adj.
+specialise	v.
+specialist	n.
+speciality	n.
+specifications	n pl.
+speech	n.
+speed	n.
+spell	v.
+spend	v & n.
+spill	v.
+spite	n.
+sponsor	n & v.
+spy	n & v.
+square	n & adj.
+St	abbr.
+staff	n.
+stage	n.
+stairs	n pl.
+stamp	n.
+stand	v & n.
+standard	n & adj.
+staple	n.
+stapler	n.
+start	n & v.
+start-up	adj.
+state	n & v.
+stationery	n.
+statistics	n.
+stay	n & v.
+steady	adj.
+steal	v.
+steam	n.
+steel	n & adj.
+steep	adj.
+step	n & v.
+still	adv.
+stock	n & v.
+stocks	n.
+stone	n.
+stop	v & n.
+storage	n.
+store	n & v.
+storeroom	n.
+storey	n.
+storm	n.
+story	n.
+straight	adj & adv.
+strange	adj.
+stranger	n.
+strategy	n.
+street	n.
+strength	n.
+strengthen	v.
+stress	n & v.
+strict	adj.
+strike	n & v.
+string	n.
+strong	adj.
+structure	n & v.
+student	n.
+studies	n.
+study	n & v.
+stupid	adj.
+subsequently	adv.
+subsidiary	n & adj.
+subject	n.
+subtract	v.
+subway	n.
+succeed	v.
+success	n.
+such	adj.
+sudden	adj.
+suffer	v.
+sufficient	adj.
+suggest	v.
+suggestion	n.
+suit	n & v.
+suitability	n.
+suitable	adj.
+suitcase	n.
+suite	n.
+sum	n.
+supermarket	n.
+supervise	v.
+supervision	n.
+supper	n.
+supplies	n pl.
+supply	n & v.
+support	n & v.
+suppose	v.
+surcharge	n.
+sure	adj.
+surname	n.
+surplus	n.
+surprise	n, v & adj.
+survey	n.
+sweep	v.
+swing	n & v.
+switch	n & v.
+system	n.
+table	n.
+take	v.
+takeover	n.
+takings	n.
+talk	n & v.
+tall	adj.
+tap	n.
+tape	n & v.
+target	n & v.
+task	n.
+taste	n & v.
+tax	n & v.
+taxation	n.
+taxi	n.
+taxpayer	n.
+tea	n.
+teach	v.
+team	n.
+tear	n & v.
+technical	adj.
+technician	n.
+technique	n.
+technological	adj.
+technology	n.
+tel	abbr.
+telecommunications	n.
+telegram	n.
+telegraph	n.
+telephone	n & v.
+television	n.
+telex	n.
+tell	v.
+temperature	n.
+temporary	adj.
+tenant	n.
+terminal	n.
+terms	n pl.
+terrible	adj.
+test	n & v.
+text	n.
+textile	n.
+than	conj.
+thank	v.
+thanks	n.
+that	
+the	det.
+theatre	n.
+their	adj.
+theirs	pron.
+them	pron.
+themselves	pron.
+then	adv.
+theory	n.
+there	adv & pron.
+therefore	adv.
+thermometer	n.
+these	adj & pron.
+they	pron.
+thick	adj.
+thief	n.
+thin	adj.
+thing	n.
+think	v.
+thirst	n.
+this	adj & pron.
+those	adj & pron.
+though	conj.
+thought	n.
+through	prep.
+throughout	prep.
+throw	v.
+tick	n & v.
+ticket	n.
+tidy	adj & v.
+tie	n & v.
+tiger	n.
+tight	adj.
+till	
+time	n.
+timetable	n & v.
+tin	n.
+tin-opener	n.
+tiny	adj.
+tip	n.
+tired	adj.
+title	n.
+to	prep.
+today	adv & n.
+together	adv.
+toilet	n.
+tomorrow	adv & n.
+tonight	adv & n.
+too	adv.
+tool	n.
+top	n.
+topic	n.
+total	n.
+touch	v & n.
+tour	n & v.
+tourist	n.
+tower	n.
+town	n.
+tradesman	n.
+traditional	adj.
+traffic	n & v.
+train	n & v.
+trainee	n.
+trainers	n.
+tram	n.
+transfer	n & v.
+translate	v.
+translation	n.
+transport	n & v.
+transportation	n.
+travel	v.
+expenses	n.
+trial	n.
+trip	n.
+trouble	n.
+truck	Am Eng.
+true	adj.
+trust	n & v.
+truth	n.
+try	v.
+tube	n.
+tunnel	n.
+turn	n & v.
+turning	n.
+turnover	n.
+TV	abbr.
+twice	adv.
+twin	n.
+type	n & v.
+typewriter	n.
+typical	adj.
+typist	n.
+ugly	adj.
+underground	adj & n.
+understand	v.
+undo	v.
+uniform	n.
+union	n.
+unit	n.
+universe	n.
+university	n.
+unleaded	adj.
+unless	conj.
+until	prep.
+up	adv & prep.
+update	n & v.
+upgrade	n & v.
+upon	prep.
+upstairs	adv.
+upturn	n.
+upward	adj.
+urgent	adj.
+us	pron.
+use	n & v.
+usual	adj.
+vacancy	n.
+vacation	n.
+valid	adj.
+valuable	adj.
+value	n & v.
+van	n.
+variety	n.
+various	adj.
+vary	v.
+vehicle	n.
+venture	n.
+venue	n.
+very	adj & adv.
+victory	n.
+videotape	n.
+view	n.
+village	n.
+virus	n.
+visa	n.
+visit	n & v.
+voice	n.
+volume	n.
+vote	n & v.
+voyage	n.
+wait	n & v.
+waitress	n.
+wake	up.
+walk	n & v.
+wall	n.
+wallet	n.
+want	v.
+war	n.
+warehouse	n.
+warm	adj.
+warn	v.
+wash	n & v.
+waste	adj, v & n.
+wastepaper	basket/bin.
+watch	v & n.
+water	n & v.
+wave	n & v.
+way	n.
+we	pron.
+weak	adj.
+weakness	n.
+wealth	n.
+wear	v & n.
+weather	n.
+web	n.
+website	n.
+week	n.
+weekday	n.
+weekend	n.
+weigh	v.
+weight	n.
+welcome	n.
+welfare	n.
+well	
+well-known	adj.
+well-made	adj.
+west	
+wet	adj.
+what	pron.
+whatever	pron.
+wheel	n & v.
+when	adv & conj.
+whenever	pron.
+where	adv & conj.
+whereas	conj.
+whether	conj.
+which	pron.
+while	conj.
+whiteboard	n.
+whole	adj.
+wholesale	adj & adv.
+wholesaler	n.
+whose	pron.
+why	adv & conj.
+wide	adj & adv.
+width	n.
+will	v.
+willing	adj.
+win	n & v.
+window	n.
+wing	n.
+wire	n.
+wise	adj.
+wish	n & v.
+with	prep.
+withdraw	v.
+within	adv & prep.
+without	prep.
+witness	v & n.
+woman	n.
+wonder	v.
+wood	n.
+wooden	adj.
+wool	n.
+word	n.
+work	n & v.
+workforce	n.
+workman	n.
+workplace	n.
+workshop	n.
+workstation	n.
+world	n.
+worried	adj.
+worry	n & v.
+worth	adj.
+wrap	v.
+write	v.
+wrong	adj.
+yard	n.
+yd	abbr.
+yes	int.
+yesterday	adv & n.
+yet	adv.
+yours	pron.
+yourself	pron.
+youth	n.
+yr	abbr.
+zero	n.
+zone	n.
