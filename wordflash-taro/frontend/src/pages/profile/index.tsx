@@ -22,17 +22,22 @@ export default class Profile extends Component<{}, ProfileState> {
     };
   }
 
-  componentDidMount() {
-    this.checkAI();
-  }
-
   checkAI = async () => {
+    // If no backend configured, show offline status immediately
+    if (!ai.isBackendAvailable()) {
+      this.setState({ aiStatus: 'error' });
+      return;
+    }
     try {
       const success = await ai.testConnection();
       this.setState({ aiStatus: success ? 'connected' : 'error' });
     } catch {
       this.setState({ aiStatus: 'error' });
     }
+  }
+
+  componentDidMount() {
+    this.checkAI();
   }
 
   toggleDataManage = () => {

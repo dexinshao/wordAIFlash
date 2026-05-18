@@ -130,3 +130,142 @@
   font-size: 28px;
   color: #94a3b8;
 }
+
+// 导入按钮
+.import-tag {
+  background: #10b981 !important;
+  margin-left: auto;
+
+  .filter-text {
+    color: #fff !important;
+  }
+}
+
+// 导入弹窗
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 85%;
+  max-height: 85vh;
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.import-format-hint {
+  padding: 16px 20px;
+  background: #f0fdf4;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #bbf7d0;
+}
+
+.hint-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #166534;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.hint-line {
+  font-size: 22px;
+  color: #15803d;
+  display: block;
+  line-height: 1.6;
+}
+
+.import-actions {
+  margin-bottom: 16px;
+}
+
+.import-upload-btn {
+  padding: 16px 24px;
+  background: #10b981;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.upload-btn-text {
+  font-size: 28px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.import-textarea-wrap {
+  margin-bottom: 16px;
+}
+
+.import-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 24px;
+  line-height: 1.5;
+  resize: vertical;
+  background: #f9fafb;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.import-preview {
+  margin-bottom: 16px;
+}
+
+.preview-hint {
+  font-size: 24px;
+  color: #3b82f6;
+}
+
+.modal-btn-row {
+  display: flex;
+  gap: 16px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+
+  &.primary {
+    background: #3b82f6;
+  }
+  &.secondary {
+    background: #f3f4f6;
+  }
+  &.disabled {
+    opacity: 0.6;
+  }
+}
+
+.modal-btn-text {
+  font-size: 28px;
+  font-weight: 500;
+
+  .primary & { color: #fff; }
+  .secondary & { color: #666; }
+}

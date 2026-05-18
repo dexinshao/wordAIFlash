@@ -427,6 +427,54 @@ class LocalDatabase {
 
   // ==================== 导入导出 ====================
 
+  /**
+   * 批量添加单词到指定词库
+   * @param wordsData 单词数据数组
+   * @param libraryId 目标词库 ID
+   * @returns 成功导入的数量
+   */
+  addWordsBatch(wordsData: Array<Partial<Word> & { word: string }>, libraryId: number): number {
+    const db = this.getDB();
+    const library = db.libraries.find(lib => lib.id === libraryId);
+    if (!library) return 0;
+
+    let addedCount = 0;
+    for (const wordData of wordsData) {
+      let word = db.words.find(w => w.word.toLowerCase() === wordData.word.toLowerCase());
+
+      if (!word) {
+        word = {
+          id: Date.now() + Math.random(),
+          word: wordData.word.toLowerCase(),
+          phonetic: wordData.phonetic || '',
+          definitions: wordData.definitions || [],
+          phrases: wordData.phrases || [],
+          examples: wordData.examples || [],
+          frequencyRank: wordData.frequencyRank || 99999,
+          createdAt: Date.now()
+        };
+        db.words.push(word);
+      }
+
+      const existingLink = db.libraryWords.find(
+        lw => lw.libraryId === libraryId && lw.wordId === word!.id
+      );
+
+      if (!existingLink) {
+        db.libraryWords.push({
+          libraryId,
+          wordId: word.id,
+          addedAt: Date.now()
+        });
+        addedCount++;
+      }
+    }
+
+    this.updateLibraryWordCount(libraryId);
+    this.save();
+    return addedCount;
+  }
+
   exportData(): DBSchema {
     return this.getDB();
   }

@@ -142,15 +142,45 @@
   - 空词库卡片显示"点击 AI 生词添加"引导文字
   - 有数据的词库才显示学习/列表按钮
 
-### 5.2 CloudBase AI 认证问题
+### 5.2 CloudBase AI Token 额度耗尽问题
 
-- **问题**：最初使用 `hunyuan-turbo` 模型（hunyuan-exp 分组），Token 额度已耗尽
-- **修复**：切换至 `hunyuan-v3` 分组的 `hy3-preview` 模型，URL provider 改为 `hunyuan-v3`
+- **问题**：最初使用 `hunyuan-turbo` 模型（hunyuan-exp 分组），调用时返回 `429 EXCEED_TOKEN_QUOTA_LIMIT`，小程序成长计划赠送的体验额度已耗尽
+- **排查**：登录 CloudBase 控制台查看 AI 资源用量，发现 hunyuan-exp 分组额度为 0，而 hunyuan-v3 分组有 100,100,000 Token 完全未使用
+- **修复**：切换至 `hunyuan-v3` 分组的 `hy3-preview` 模型，API 端点从 `hunyuan-turbo` 改为 `hunyuan-v3`
+- **教训**：CloudBase 小程序成长计划赠送的体验模型额度有限，应优先使用 `hy3-preview`（hunyuan-v3）而非 `hunyuan-turbo`（hunyuan-exp），前者有 1 亿 Token 免费额度
 
-### 5.3 ES Module 兼容问题
+### 5.3 CloudBase AI 认证问题
 
-- **问题**：后端 `type: "module"`，`require('node-fetch')` 报错
-- **修复**：使用 `createRequire(import.meta.url)` 创建 require 函数
+- **问题**：最初尝试使用 CloudBase Auth Proxy 代理认证，在沙箱环境中返回 401 未授权
+- **排查**：沙箱环境未绑定腾讯云 OAuth 账号，auth-proxy 无法获取有效 Token
+- **修复**：改为直接使用 CloudBase API Key（JWT 格式），由用户提供后写入后端 `.env` 文件，通过 `Authorization: Bearer {API_KEY}` 直接调用 AI 接口
+
+### 5.4 ES Module 兼容问题
+
+- **问题**：后端 `type: "module"`，`require('node-fetch')` 报错 `require is not defined`
+- **修复**：使用 `createRequire(import.meta.url)` 创建 require 函数加载 CommonJS 包
+
+### 5.5 GitHub 代码推送问题
+
+- **问题 1**：`gh auth login --web` 在沙箱环境中无法完成浏览器授权流程，验证码过期后无法刷新
+- **问题 2**：第一个 Personal Access Token（fine-grained）没有 `repo` 权限，创建仓库返回 `Resource not accessible`，推送返回 `401 Bad credentials`
+- **问题 3**：第一个 Token 失效后，`gh auth login --with-token` 也返回 401
+- **修复**：重新生成 Classic Token（勾选 `repo` 完整权限），通过 `git remote set-url` 嵌入 Token 认证，推送至 `taro` 分支的 `wordflash-taro/` 目录
+- **教训**：Fine-grained Token 权限粒度细，容易遗漏必要权限；Classic Token 勾选 `repo` 即可满足大部分场景
+
+### 5.6 上传文件问题
+
+- **问题**：用户希望上传本地 zip 包到沙箱环境，Cloud Studio 没有直接上传文件入口
+- **替代方案**：
+  1. 将代码推送到 GitHub 公开仓库，在沙箱中 `git clone` 拉取
+  2. 私有仓库需授权 GitHub Token 后 clone
+- **教训**：Cloud Studio 沙箱是云端容器，无法直接访问本地文件系统；需通过 GitHub 等代码托管平台中转
+
+### 5.7 下载文件问题
+
+- **问题**：Cloud Studio 文件浏览器无法右键下载文件，只能拖到对话框
+- **替代方案**：将文件放到前端 `public/` 目录，通过预览 URL 直接访问下载
+- **教训**：沙箱环境的文件操作受限，需利用 Web 服务暴露静态文件
 
 ---
 
@@ -212,3 +242,11 @@ backend/src/
 - [ ] 学习记录日历/连续打卡提醒
 - [ ] 微信小程序发布配置（AppID: wx91a54e09459c1f16）
 - [ ] 导出为微信小程序原生代码，使用微信开发者工具编译
+
+---
+
+## 九、代码仓库
+
+- 仓库地址：https://github.com/dexinshao/wordAIFlash
+- Taro 版本代码位于 `taro` 分支的 `wordflash-taro/` 目录
+- `main` 分支保留原生微信小程序代码
