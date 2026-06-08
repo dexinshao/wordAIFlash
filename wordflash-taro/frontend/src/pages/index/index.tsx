@@ -10,6 +10,8 @@ interface IndexState {
   libraries: Library[];
   globalStats: GlobalStats | null;
   isLoading: boolean;
+  initProgress: number;
+  initMessage: string;
   showDeleteModal: boolean;
   deleteTarget: Library | null;
   mergeTargetId: number | null;
@@ -34,6 +36,8 @@ export default class Index extends Component<{}, IndexState> {
       libraries: [],
       globalStats: null,
       isLoading: true,
+      initProgress: 0,
+      initMessage: '正在初始化...',
       showDeleteModal: false,
       deleteTarget: null,
       mergeTargetId: null,
@@ -52,12 +56,20 @@ export default class Index extends Component<{}, IndexState> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // 初始化数据库（首次使用时导入词库）
+    if (!db.isInitialized()) {
+      await db.initialize((progress, message) => {
+        this.setState({ initProgress: progress, initMessage: message });
+      });
+    }
     this.loadData();
   }
 
   componentDidShow() {
-    this.loadData();
+    if (db.isInitialized()) {
+      this.loadData();
+    }
   }
 
   loadData = () => {
@@ -307,9 +319,25 @@ export default class Index extends Component<{}, IndexState> {
   }
 
   render() {
-    const { libraries, globalStats, showAiModal, aiStep, aiInput, aiGenerating,
+    const { libraries, globalStats, isLoading, initProgress, initMessage, showAiModal, aiStep, aiInput, aiGenerating,
       generatedWords, generatedTopic, relatedLibraries, excludeLibId, selectedTargetLibId,
       showExcludeOptions, showDeleteModal, deleteTarget, mergeTargetId, aiSuggestions } = this.state;
+
+    // 显示初始化加载进度
+    if (isLoading) {
+      return (
+        <View className='index-page'>
+          <View className='loading-container'>
+            <View className='loading-spinner' />
+            <Text className='loading-message'>{initMessage}</Text>
+            <View className='loading-progress-bar'>
+              <View className='loading-progress-fill' style={{ width: `${initProgress}%` }} />
+            </View>
+            <Text className='loading-progress-text'>{initProgress}%</Text>
+          </View>
+        </View>
+      );
+    }
 
     const nonMasteredLibs = libraries.filter(lib => lib.category !== 'mastered');
     const mergeCandidates = libraries.filter(lib =>

@@ -4,6 +4,24 @@ import type { DBSchema, Library, Word, Progress, GlobalStats, LibraryStats, Sett
 const DB_KEY = 'wordflash_db';
 const DATA_VERSION = '1.0.0';
 
+// 内置词库 ID 到文件名的映射
+const BUILTIN_LIB_FILES: Record<number, string> = {
+  1: 'lib-1.json', // 四级词汇
+  2: 'lib-2.json', // 六级词汇
+  3: 'lib-3.json', // 托福词汇
+  4: 'lib-4.json', // 雅思词汇
+  5: 'lib-5.json', // 英语八级
+  6: 'lib-6.json', // BEC商务
+  7: 'lib-7.json', // 高中词汇
+  8: 'lib-8.json', // 高频10000
+};
+
+// 内置词库总数
+const BUILTIN_LIB_COUNT = Object.keys(BUILTIN_LIB_FILES).length;
+
+// 加载进度回调类型
+type ProgressCallback = (progress: number, message: string) => void;
+
 function getDefaultLibraries(): Library[] {
   return [
     { id: 1, name: '四级词汇', description: '大学英语四级考试核心词汇', wordCount: 0, category: 'cet4', isBuiltin: true, createdAt: Date.now() },
@@ -16,6 +34,61 @@ function getDefaultLibraries(): Library[] {
     { id: 8, name: '高频10000', description: 'COCA高频词汇', wordCount: 0, category: 'top10000', isBuiltin: true, createdAt: Date.now() },
     { id: 9, name: '✅ 已掌握', description: '已掌握的单词汇总', wordCount: 0, category: 'mastered', isBuiltin: true, createdAt: Date.now() }
   ];
+}
+
+/**
+ * 从 meta.json 加载库信息和设置
+ */
+function loadMetaFromJSON(jsonData: any): Partial<DBSchema> {
+  try {
+    if (jsonData && jsonData.libraries) {
+      return {
+        libraries: jsonData.libraries as Library[],
+        settings: jsonData.settings as Settings || undefined,
+        stats: jsonData.stats as Stats || undefined
+      };
+    }
+  } catch (e) {
+    console.error('Failed to parse meta.json', e);
+  }
+  return {};
+}
+
+/**
+ * 从 lib JSON 文件加载单词数据
+ */
+function loadWordsFromJSON(jsonData: any, libraryId: number): { words: Word[]; libraryWords: DBSchema['libraryWords'] } {
+  try {
+    if (Array.isArray(jsonData)) {
+      const words: Word[] = [];
+      const libraryWords: DBSchema['libraryWords'] = [];
+      const now = Date.now();
+
+      jsonData.forEach((item: any, index: number) => {
+        const word: Word = {
+          id: now + libraryId * 100000 + index,
+          word: item.word?.toLowerCase() || '',
+          phonetic: item.phonetic || '',
+          definitions: item.definitions || [],
+          phrases: item.phrases || [],
+          examples: item.examples || [],
+          frequencyRank: item.frequencyRank || 99999,
+          createdAt: now
+        };
+        words.push(word);
+        libraryWords.push({
+          libraryId,
+          wordId: word.id,
+          addedAt: now
+        });
+      });
+
+      return { words, libraryWords };
+    }
+  } catch (e) {
+    console.error(`Failed to parse lib-${libraryId}.json`, e);
+  }
+  return { words: [], libraryWords: [] };
 }
 
 function createEmptyDB(): DBSchema {
@@ -42,19 +115,117 @@ function createEmptyDB(): DBSchema {
 
 class LocalDatabase {
   private db: DBSchema | null = null;
+  private initialized: boolean = false;
+  private initializing: boolean = false;
+  private initPromise: Promise<void> | null = null;
+
+  /**
+   * 异步初始化数据库（首次使用时导入内置词库）
+   * @param onProgress 进度回调 (progress: 0-100, message: string) => void
+   */
+  async initialize(onProgress?: ProgressCallback): Promise<void> {
+    if (this.initialized) return;
+    if (this.initializing && this.initPromise) return this.initPromise;
+
+    this.initializing = true;
+    this.initPromise = this._doInitialize(onProgress);
+    await this.initPromise;
+    this.initializing = false;
+    this.initialized = true;
+  }
+
+  private async _doInitialize(onProgress?: ProgressCallback): Promise<void> {
+    const stored = Taro.getStorageSync(DB_KEY);
+    if (!stored) {
+      // 首次使用，创建空数据库并导入内置词库
+      onProgress?.(5, '准备导入词库数据...');
+      this.db = createEmptyDB();
+      await this.importBuiltinData(onProgress);
+      this.save();
+      onProgress?.(100, '导入完成！');
+    } else {
+      this.db = stored as DBSchema;
+      this.migrateDataIfNeeded();
+    }
+  }
 
   getDB(): DBSchema {
     if (!this.db) {
       const stored = Taro.getStorageSync(DB_KEY);
       if (!stored) {
+        // 同步初始化：返回空数据库（不应该发生，因为应该先调用 initialize）
+        console.warn('DB not initialized, returning empty DB. Please call initialize() first.');
         this.db = createEmptyDB();
-        this.save();
       } else {
         this.db = stored as DBSchema;
         this.migrateDataIfNeeded();
       }
     }
     return this.db;
+  }
+
+  isInitialized(): boolean {
+    return this.initialized;
+  }
+
+  /**
+   * 导入内置词库数据（仅首次使用时调用）
+   * 注意：在微信小程序中，data 目录被复制到 weapp/data，需要用相对路径访问
+   */
+  private async importBuiltinData(onProgress?: ProgressCallback): Promise<void> {
+    try {
+      const fs = Taro.getFileSystemManager();
+      // weapp 目录下的 data 子目录
+      const dataDir = `${Taro.env.USER_DATA_PATH}/../data/`;
+
+      // 先加载 meta.json 获取库信息
+      try {
+        onProgress?.(10, '加载词库信息...');
+        const metaContent = fs.readFileSync(`${dataDir}meta.json`, 'utf-8') as string;
+        const metaData = JSON.parse(metaContent);
+        const metaInfo = loadMetaFromJSON(metaData);
+
+        if (metaInfo.libraries) {
+          this.db!.libraries = metaInfo.libraries;
+        }
+        if (metaInfo.settings) {
+          this.db!.settings = metaInfo.settings;
+        }
+        if (metaInfo.stats) {
+          this.db!.stats = metaInfo.stats;
+        }
+      } catch (e) {
+        console.error('Failed to load meta.json', e);
+      }
+
+      // 加载每个内置词库的单词
+      const libEntries = Object.entries(BUILTIN_LIB_FILES);
+      for (let i = 0; i < libEntries.length; i++) {
+        const [libId, fileName] = libEntries[i];
+        try {
+          const libIdNum = parseInt(libId);
+          const progress = 10 + Math.floor((i / libEntries.length) * 80);
+          onProgress?.(progress, `正在导入 ${this.db!.libraries.find(l => l.id === libIdNum)?.name || fileName}...`);
+
+          const content = fs.readFileSync(`${dataDir}${fileName}`, 'utf-8') as string;
+          const jsonData = JSON.parse(content);
+          const { words, libraryWords } = loadWordsFromJSON(jsonData, libIdNum);
+
+          this.db!.words.push(...words);
+          this.db!.libraryWords.push(...libraryWords);
+
+          // 更新词库单词数
+          const library = this.db!.libraries.find(l => l.id === libIdNum);
+          if (library) {
+            library.wordCount = libraryWords.length;
+          }
+        } catch (e) {
+          console.error(`Failed to load ${fileName}`, e);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to import builtin data', e);
+    }
   }
 
   save(): void {

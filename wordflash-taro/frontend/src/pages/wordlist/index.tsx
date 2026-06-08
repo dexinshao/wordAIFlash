@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, Input, Textarea } from '@tarojs/components';
+import { View, Text, Input, Textarea, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { db } from '../../services/db';
 import { ai } from '../../services/ai';
 import type { Word } from '../../types/wordflash';
 import './index.scss';
 
+const PAGE_SIZE = 50; // 每页加载50个单词
+
 interface WordListState {
   libraryId: number | null;
   libraryName: string;
-  words: Word[];
+  words: Word[]; // 所有单词（不传到视图层）
+  displayWords: Word[]; // 当前显示的单词（分页）
+  currentPage: number;
+  hasMore: boolean;
   search: string;
   filter: string;
   showImportModal: boolean;
@@ -24,6 +29,9 @@ export default class WordList extends Component<{}, WordListState> {
       libraryId: null,
       libraryName: '',
       words: [],
+      displayWords: [],
+      currentPage: 1,
+      hasMore: false,
       search: '',
       filter: 'all',
       showImportModal: false,
@@ -35,7 +43,7 @@ export default class WordList extends Component<{}, WordListState> {
   componentDidMount() {
     const instance = Taro.getCurrentInstance();
     const libraryId = parseInt(instance.router?.params?.libraryId || '0');
-    if (!libraryId) {
+    if (!libraryId || isNaN(libraryId)) {
       Taro.showToast({ title: '参数错误', icon: 'none' });
       Taro.navigateBack();
       return;
@@ -44,24 +52,51 @@ export default class WordList extends Component<{}, WordListState> {
     this.setState({
       libraryId,
       libraryName: library?.name || ''
-    }, () => this.loadWords());
+    }, () => this.loadWords(true));
   }
 
-  loadWords = () => {
+  loadWords = (reset: boolean = true) => {
     if (!this.state.libraryId) return;
-    const words = db.getWords(this.state.libraryId, {
-      search: this.state.search,
-      filter: this.state.filter
-    });
-    this.setState({ words });
+
+    if (reset) {
+      // 重新加载，重置分页
+      const allWords = db.getWords(this.state.libraryId, {
+        search: this.state.search,
+        filter: this.state.filter
+      });
+      const displayWords = allWords.slice(0, PAGE_SIZE);
+      this.setState({
+        words: allWords,
+        displayWords,
+        currentPage: 1,
+        hasMore: allWords.length > PAGE_SIZE
+      });
+    } else {
+      // 加载更多
+      const { words, currentPage } = this.state;
+      const start = currentPage * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const moreWords = words.slice(start, end);
+      if (moreWords.length > 0) {
+        this.setState({
+          displayWords: [...this.state.displayWords, ...moreWords],
+          currentPage: currentPage + 1,
+          hasMore: end < words.length
+        });
+      }
+    }
+  }
+
+  loadMore = () => {
+    this.loadWords(false);
   }
 
   onSearchChange = (value: string) => {
-    this.setState({ search: value }, () => this.loadWords());
+    this.setState({ search: value }, () => this.loadWords(true));
   }
 
   setFilter = (filter: string) => {
-    this.setState({ filter }, () => this.loadWords());
+    this.setState({ filter }, () => this.loadWords(true));
   }
 
   // ==================== 导入功能 ====================
@@ -79,8 +114,6 @@ export default class WordList extends Component<{}, WordListState> {
   }
 
   handleFileUpload = () => {
-    // WeChat MiniProgram: use Taro.chooseMessageFile
-    // H5: use hidden file input
     const env = Taro.getEnv();
     if (env === Taro.ENV_TYPE.WEAPP) {
       Taro.chooseMessageFile({
@@ -91,7 +124,7 @@ export default class WordList extends Component<{}, WordListState> {
           const filePath = res.tempFiles[0].path;
           try {
             const fs = Taro.getFileSystemManager();
-            const content = fs.readFileSync(filePath, 'utf-8');
+            const content = fs.readFileSync(filePath, 'utf-8') as string;
             this.setState({ importText: content as string });
           } catch (err) {
             Taro.showToast({ title: '读取文件失败', icon: 'none' });
@@ -99,7 +132,6 @@ export default class WordList extends Component<{}, WordListState> {
         }
       });
     } else {
-      // H5 mode
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.txt';
@@ -128,14 +160,11 @@ export default class WordList extends Component<{}, WordListState> {
     this.setState({ importing: true });
 
     try {
-      // Parse txt content directly on frontend (no backend needed)
       const words = this.parseTxtContent(importText);
 
       if (words.length > 0) {
-        // Add parsed words to local database
         const addedCount = db.addWordsBatch(words, libraryId);
 
-        // Try to fetch definitions for words without meanings in background
         const wordsWithoutMeaning = words.filter(
           (w: any) => !w.definitions?.[0]?.meaning
         );
@@ -145,7 +174,7 @@ export default class WordList extends Component<{}, WordListState> {
 
         Taro.showToast({ title: `成功导入 ${addedCount} 个单词`, icon: 'success' });
         this.setState({ showImportModal: false, importText: '' });
-        this.loadWords();
+        this.loadWords(true);
       } else {
         Taro.showToast({ title: '未能解析出有效单词', icon: 'none' });
       }
@@ -156,9 +185,6 @@ export default class WordList extends Component<{}, WordListState> {
     }
   }
 
-  /**
-   * Parse txt content into word data (frontend-only, no backend)
-   */
   parseTxtContent(content: string): Array<Partial<Word> & { word: string }> {
     const words: Array<Partial<Word> & { word: string }> = [];
     const seen = new Set<string>();
@@ -171,26 +197,22 @@ export default class WordList extends Component<{}, WordListState> {
       let phonetic = '';
       let rest = '';
 
-      // Try: word [phonetic] definition or word /phonetic/ definition
       const phoneticMatch = trimmed.match(/^(\S+)\s+[/\[\\]([^/\]\\]*)[/\]\\]\s*(.*)/);
       if (phoneticMatch) {
         word = phoneticMatch[1].toLowerCase();
         phonetic = phoneticMatch[2].trim();
         rest = phoneticMatch[3].trim();
       } else {
-        // Try tab separated
         const tabParts = trimmed.split('\t');
         if (tabParts.length >= 2) {
           word = tabParts[0].trim().toLowerCase();
           rest = tabParts.slice(1).join(' ').trim();
         } else {
-          // Try pipe separated
           const pipeParts = trimmed.split('|');
           if (pipeParts.length >= 2) {
             word = pipeParts[0].trim().toLowerCase();
             rest = pipeParts.slice(1).join('|').trim();
           } else {
-            // Space separated
             const spaceMatch = trimmed.match(/^(\S+)\s+(.*)/);
             if (spaceMatch) {
               word = spaceMatch[1].toLowerCase();
@@ -202,7 +224,6 @@ export default class WordList extends Component<{}, WordListState> {
         }
       }
 
-      // Remove trailing asterisk
       word = word.replace(/\*+$/, '');
       if (!word || !/^[a-z]/i.test(word) || word.length < 2) continue;
       if (seen.has(word)) continue;
@@ -244,7 +265,6 @@ export default class WordList extends Component<{}, WordListState> {
       try {
         const definition = await ai.fetchWordDefinition(wordData.word);
         if (definition) {
-          // Update the word in db
           const dbData = db.getDB();
           const word = dbData.words.find(w => w.word.toLowerCase() === wordData.word.toLowerCase());
           if (word && (!word.definitions?.[0]?.meaning)) {
@@ -262,7 +282,8 @@ export default class WordList extends Component<{}, WordListState> {
   }
 
   render() {
-    const { libraryName, words, search, filter, showImportModal, importText, importing } = this.state;
+    const { libraryName, displayWords, search, filter, showImportModal, importText, importing, hasMore } = this.state;
+
     const filters = [
       { key: 'all', label: '全部' },
       { key: 'unlearned', label: '未学习' },
@@ -300,11 +321,15 @@ export default class WordList extends Component<{}, WordListState> {
 
         {/* 单词列表 */}
         <View className='word-count'>
-          <Text className='count-text'>{libraryName} · {words.length} 个单词</Text>
+          <Text className='count-text'>{libraryName} · 已显示 {displayWords.length} 个单词</Text>
         </View>
 
-        <View className='word-list'>
-          {words.map(word => (
+        <ScrollView
+          className='word-list'
+          scrollY
+          onScrollToLower={this.loadMore}
+        >
+          {displayWords.map(word => (
             <View key={word.id} className='word-item'>
               <View className='word-left'>
                 <Text className='word-name'>{word.word}</Text>
@@ -325,12 +350,18 @@ export default class WordList extends Component<{}, WordListState> {
             </View>
           ))}
 
-          {words.length === 0 && (
+          {displayWords.length === 0 && (
             <View className='empty-state'>
               <Text className='empty-text'>暂无单词</Text>
             </View>
           )}
-        </View>
+
+          {hasMore && (
+            <View className='load-more' onClick={this.loadMore}>
+              <Text className='load-more-text'>加载更多...</Text>
+            </View>
+          )}
+        </ScrollView>
 
         {/* 导入弹窗 */}
         {showImportModal && (

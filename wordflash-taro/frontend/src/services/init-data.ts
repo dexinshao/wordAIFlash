@@ -24,10 +24,46 @@ export function getLoadProgress(): number {
 }
 
 /**
+ * Load JSON data from local JS modules (works in mini program environment)
+ * Uses static require() calls with correct relative paths
+ * From weapp/services/init-data.js, data/ is at ../data/
+ */
+function loadJSON(filePath: string): any {
+  try {
+    let module;
+    
+    if (filePath.includes('meta.json')) {
+      module = require('../data/meta.js');
+    } else if (filePath.includes('lib-1')) {
+      module = require('../data/lib-1.js');
+    } else if (filePath.includes('lib-2')) {
+      module = require('../data/lib-2.js');
+    } else if (filePath.includes('lib-3')) {
+      module = require('../data/lib-3.js');
+    } else if (filePath.includes('lib-4')) {
+      module = require('../data/lib-4.js');
+    } else if (filePath.includes('lib-5')) {
+      module = require('../data/lib-5.js');
+    } else if (filePath.includes('lib-6')) {
+      module = require('../data/lib-6.js');
+    } else if (filePath.includes('lib-7')) {
+      module = require('../data/lib-7.js');
+    } else if (filePath.includes('lib-8')) {
+      module = require('../data/lib-8.js');
+    }
+    
+    return module && (module.default || module);
+  } catch (err) {
+    console.warn(`无法加载文件: ${filePath}`, err);
+    throw err;
+  }
+}
+
+/**
  * Initialize word data from local JSON files (offline mode)
  */
 export function initializeWordData(): Promise<boolean> {
-  if (_loadPromise) return _loadPromise
+  if (_loadPromise) return _loadPromise;
 
   _loadPromise = _doInitialize()
   return _loadPromise
@@ -41,11 +77,11 @@ async function _doInitialize(): Promise<boolean> {
   }
 
   try {
-    console.log('开始初始化词库数据（离线模式）...')
+    console.log('开始初始化词库数据（离线模式）...');
 
     // Load metadata
     _loadProgress = 5
-    const meta = await import('../data/meta.json')
+    const meta = loadJSON('/data/meta.json');
 
     const dbData: any = {
       version: meta.version,
@@ -56,7 +92,7 @@ async function _doInitialize(): Promise<boolean> {
       masteredWords: [],
       settings: meta.settings,
       stats: meta.stats
-    }
+    };
 
     let wordIdCounter = Date.now()
     const wordMap = new Map<string, number>()
@@ -68,11 +104,10 @@ async function _doInitialize(): Promise<boolean> {
 
     // Load each library's word data
     for (const library of meta.libraries) {
-      if (library.wordCount === 0) continue
+      if (library.wordCount === 0) continue;
 
       try {
-        const libData = await import(`../data/lib-${library.id}.json`)
-        const compactWords: any[] = libData.default || libData
+        const compactWords = loadJSON(`/data/lib-${library.id}.json`);
 
         for (const cw of compactWords) {
           const wordText = cw.w.toLowerCase()

@@ -19,8 +19,20 @@ const config: UserConfigExport = {
     TARO_APP_API_URL: JSON.stringify(process.env.TARO_APP_API_URL || ''),
   },
   copy: {
-    patterns: [],
+    patterns: [
+      { from: 'src/data', to: '../weapp/data' },
+      { from: 'src/data/*.js', to: '../weapp/data' }
+    ],
     options: {}
+  },
+  mini: {
+    subpackages: [
+      {
+        root: 'data',
+        name: 'data',
+        pages: [] as string[]  // 没有页面，只是数据分包
+      }
+    ]
   },
   framework: 'react',
   compiler: {
